@@ -38,7 +38,7 @@ attributes = {
 }
 
 
-data_use_to_create_base = {'data': ['email', 'banking', 'healthcare', 'door locker', 'call assistant', 'video call', 'location', 'voice recording', 'playlists', 'thermostat', 'shopping', 'weather', '_']}
+data_use_to_create_base = {'data': ['email', 'smart camera', 'to do list', 'sleeping hours', 'banking', 'healthcare', 'door locker', 'call assistant', 'video call', 'location', 'voice recording', 'playlists', 'thermostat', 'shopping', 'weather', '_']}
 
 
 
@@ -578,137 +578,140 @@ def load_test(datatype):
 if __name__ == "__main__":
 
     # all_data = data_input('./data/new_file.csv')
+    accuracy_summary = []
     for index, item in enumerate(data_use_to_create_base['data'][:-1]):
+        if item not in ['smart camera', 'to do list', 'sleeping hours']:
+            # (training_set, test_set) = sample_split(all_data, item)
+            # # all_data = data_trans_to_plaintext('./data/new_file.csv')   #all the data in plain text format
+            # x = to_plaintext(training_set)
+            test_set = load_test(item)
+            initial_rules_1 = rule_mining(0.015, 0.56, item)
+            initial_rules_2 = []
+            exception = ['with purpose&no condition', 'no purpose&no condition', 'with purpose&condition1','with purpose&condition2','with purpose&condition3','with purpose&condition5','with purpose&condition4']
+            for k, v in enumerate(initial_rules_1):
+                if len(v[0]) == 1 and v[0][0] not in exception:
+                    initial_rules_2.append(v)
+                elif len(v[0]) > 1:
+                    initial_rules_2.append(v)
 
-        # (training_set, test_set) = sample_split(all_data, item)
-        # # all_data = data_trans_to_plaintext('./data/new_file.csv')   #all the data in plain text format
-        # x = to_plaintext(training_set)
-        test_set = load_test(item)
-        initial_rules_1 = rule_mining(0.015, 0.56, item)
-        initial_rules_2 = []
-        exception = ['with purpose&no condition', 'no purpose&no condition', 'with purpose&condition1','with purpose&condition2','with purpose&condition3','with purpose&condition5','with purpose&condition4']
-        for k, v in enumerate(initial_rules_1):
-            if len(v[0]) == 1 and v[0][0] not in exception:
-                initial_rules_2.append(v)
-            elif len(v[0]) > 1:
-                initial_rules_2.append(v)
+           
+            '''
+                Build Norm Base:
+                Norm Base is a dictionary and can be traced by 'data' -> 'precondition' -> 'effect' -> 'action' -> 'modality + value'    
+            '''
 
-       
-        '''
-            Build Norm Base:
-            Norm Base is a dictionary and can be traced by 'data' -> 'precondition' -> 'effect' -> 'action' -> 'modality + value'    
-        '''
+            norm_build_dict = {
+                    '_': {
+                        '_': {},
+                        'confidential': {},
+                        'review': {},
+                        'store': {}
+                        },
+                    'anonimised': {},
+                    'notified': {}
+                    }
+            norm_base = {data:copy.deepcopy(norm_build_dict) for data in data_use_to_create_base['data']}
 
-        norm_build_dict = {
-                '_': {
-                    '_': {},
-                    'confidential': {},
-                    'review': {},
-                    'store': {}
-                    },
-                'anonimised': {},
-                'notified': {}
-                }
-        norm_base = {data:copy.deepcopy(norm_build_dict) for data in data_use_to_create_base['data']}
+            #create same data structure for matching norms and active norms
+            # matching_norms = copy.deepcopy(norm_base)
+            # active_norms = copy.deepcopy(norm_base)
 
-        #create same data structure for matching norms and active norms
-        # matching_norms = copy.deepcopy(norm_base)
-        # active_norms = copy.deepcopy(norm_base)
-
-        
-        norm_collection = []
-        action_collection = []
-        #测试用 initial_rules
-        for index, item in enumerate(initial_rules_2):
-        #for item in initial_rules:
-            #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
-            # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
-            # e.g.: item[1] = ['Acceptable']
-            # e.g.: item[2] = [1.2, 1.5]  lift & confidence
-            (action, condition_type) = action_format(item[0])
-            #action = ['send', 'spa', 'neighbours', 'ride_service', 'location', 'primary_user', 'with the purpose of knowing the data']
-            norm = norm_format(condition_type, item[1][0], action, item[2])
-            # import pdb;pdb.set_trace()
-            # norm = [modality, precondition, action, effect, confidence]
-            norm_collection.append(norm)
-            action_collection.append(action)
             
+            norm_collection = []
+            action_collection = []
+            #测试用 initial_rules
+            for index, item in enumerate(initial_rules_2):
+            #for item in initial_rules:
+                #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
+                # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
+                # e.g.: item[1] = ['Acceptable']
+                # e.g.: item[2] = [1.2, 1.5]  lift & confidence
+                (action, condition_type) = action_format(item[0])
+                #action = ['send', 'spa', 'neighbours', 'ride_service', 'location', 'primary_user', 'with the purpose of knowing the data']
+                norm = norm_format(condition_type, item[1][0], action, item[2])
+                # import pdb;pdb.set_trace()
+                # norm = [modality, precondition, action, effect, confidence]
+                norm_collection.append(norm)
+                action_collection.append(action)
+                
 
 
-            if norm[1] == '_': #precondition
-                # norm_base[action[4]][norm[1]][norm[3]] = {tuple(action):{norm[0]:norm[4]}}
-                if tuple(action) not in norm_base[action[4]][norm[1]][norm[3]]:
-                    norm_base[action[4]][norm[1]][norm[3]][tuple(action)] = {}
-                if norm[0] not in norm_base[action[4]][norm[1]][norm[3]][tuple(action)]:
-                    norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]] = [norm[4]]
-                    if len(norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]]) > 1:
-                        norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]].sort(key=takeSecond, reverse=True)
-                        norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]] = norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]][0]
-                else:
-                    if norm[4] not in norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]]:
-                        norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]].append(norm[4])
-            else:   #precondition = anonimised or notified
-                if action[5] not in norm_base[action[4]][norm[1]]:
-                    norm_base[action[4]][norm[1]][action[5]] = {}
-                if tuple(action) not in norm_base[action[4]][norm[1]][action[5]]:
-                    norm_base[action[4]][norm[1]][action[5]][tuple(action)] = {}
-                if norm[0] not in norm_base[action[4]][norm[1]][action[5]][tuple(action)]:
-                    norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]] = [norm[4]]
-                else:
-                    if norm[4] not in norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]]:
-                        norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]].append(norm[4])
-                    if len(norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]]) > 1:
-                        norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]].sort(key=takeSecond, reverse=True)
-                        norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]] = norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]][0]
-        
-        
-        '''
-            Defaults is the rules mind using the training set
-            and will be put into the norm base
-        '''
-        defaults = copy.deepcopy(norm_base)
-       
+                if norm[1] == '_': #precondition
+                    # norm_base[action[4]][norm[1]][norm[3]] = {tuple(action):{norm[0]:norm[4]}}
+                    if tuple(action) not in norm_base[action[4]][norm[1]][norm[3]]:
+                        norm_base[action[4]][norm[1]][norm[3]][tuple(action)] = {}
+                    if norm[0] not in norm_base[action[4]][norm[1]][norm[3]][tuple(action)]:
+                        norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]] = [norm[4]]
+                        if len(norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]]) > 1:
+                            norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]].sort(key=takeSecond, reverse=True)
+                            norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]] = norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]][0]
+                    else:
+                        if norm[4] not in norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]]:
+                            norm_base[action[4]][norm[1]][norm[3]][tuple(action)][norm[0]].append(norm[4])
+                else:   #precondition = anonimised or notified
+                    if action[5] not in norm_base[action[4]][norm[1]]:
+                        norm_base[action[4]][norm[1]][action[5]] = {}
+                    if tuple(action) not in norm_base[action[4]][norm[1]][action[5]]:
+                        norm_base[action[4]][norm[1]][action[5]][tuple(action)] = {}
+                    if norm[0] not in norm_base[action[4]][norm[1]][action[5]][tuple(action)]:
+                        norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]] = [norm[4]]
+                    else:
+                        if norm[4] not in norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]]:
+                            norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]].append(norm[4])
+                        if len(norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]]) > 1:
+                            norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]].sort(key=takeSecond, reverse=True)
+                            norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]] = norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]][0]
+            
+            
+            '''
+                Defaults is the rules mind using the training set
+                and will be put into the norm base
+            '''
+            defaults = copy.deepcopy(norm_base)
+           
 
-        '''
-        ***************Feature1: Manage knowledge base**********************
-        knowledge base only keeps the preconditions hold by the SPA
-        '''
+            '''
+            ***************Feature1: Manage knowledge base**********************
+            knowledge base only keeps the preconditions hold by the SPA
+            '''
 
 
-        # import pdb;pdb.set_trace()
-        knowledge_base = {}
-        for datatype, subdict in defaults.items():
-            if datatype != '_':
-                knowledge_base[datatype] = {'anonimised':[], 'notified': []}
-                for key1, value1 in subdict.items():
-                    if key1 in ['anonimised', 'notified'] and value1 != {}:
-                        for key2, value2 in value1.items():
-                            knowledge_base[datatype][key1].append(key2)
-                 
-        #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
-        final_result = []
-        
-
-        for item in test_set:
-            correct_count = 0
-
-            if len(item) == 0:
+            # import pdb;pdb.set_trace()
+            knowledge_base = {}
+            for datatype, subdict in defaults.items():
+                if datatype != '_':
+                    knowledge_base[datatype] = {'anonimised':[], 'notified': []}
+                    for key1, value1 in subdict.items():
+                        if key1 in ['anonimised', 'notified'] and value1 != {}:
+                            for key2, value2 in value1.items():
+                                knowledge_base[datatype][key1].append(key2)
+                     
+            #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
+            final_result = []
+            
+            #for each user-based data, calculate the accuracy
+            for item in test_set:
+                correct_count = 0
                 accu_result = []
-            for index, value in enumerate(item):
-                act = value[:-2]
-                (new_act, this_condition) = action_format(act)
-                result = action_determine(new_act)
-                accuracy = accuracy_verify(result, value[4])
-                accu_result.append(accuracy)
-            correct_count += accu_result.count('1') 
-            # final = accu_result.count('1') / len(accu_result)
-            # final_result.append(final)
-            # print(final)
-            final_result.append(correct_count/len(item))
-            # import pdb;pdb.set_trace() 
-            # print('accuracy:', correct_count/len(item))
-        print('total:', np.mean(final_result))
-         
+                for index, value in enumerate(item):
+                    act = value[:-2]
+                    (new_act, this_condition) = action_format(act)
+                    result = action_determine(new_act)
+                    accuracy = accuracy_verify(result, value[4])
+                    accu_result.append(accuracy)
+                correct_count += accu_result.count('1') 
+                # final = accu_result.count('1') / len(accu_result)
+                # final_result.append(final)
+                # print(final)
+                final_result.append(correct_count/len(item))
+                # import pdb;pdb.set_trace() 
+                # print('accuracy:', correct_count/len(item))
+            print('accuracy for each dataset:', np.mean(final_result))
+            accuracy_summary.append(np.mean(final_result))
+    print('overall', np.mean(accuracy_summary))
+    import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
+             
     
 
 

@@ -1,5 +1,14 @@
-# Norm_reasoning
 
-##This is a draft version of code for norm reasoning project
+
+####This is a draft code version of a normative reasoning project
+---
+
+Author: Nicole Zhan
+
+Start From: July 6th
+
+
+
+
 
 
