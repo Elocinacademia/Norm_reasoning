@@ -332,7 +332,13 @@ def cosine_similarity(u, v):
     # Compute the L2 norm of v 
     norm_v = np.sqrt(np.sum(v**2))    
     # Compute the cosine similarity defined by formula (1)
-    cosine_similarity = dot/(norm_u * norm_v)    
+    cosine_similarity = dot/(norm_u * norm_v)
+    
+    # if norm_u ==0 or norm_v == 0:
+    #     cosine_similarity = 0.0
+    # else:
+    #     cosine_similarity = dot/(norm_u * norm_v)
+    # cosine_similarity = dot/(norm_u * norm_v)
     return cosine_similarity
 
 
@@ -628,10 +634,7 @@ if __name__ == "__main__":
                 # norm = [modality, precondition, action, effect, confidence]
                 norm_collection.append(norm)
                 action_collection.append(action)
-                import pdb;pdb.set_trace()
-
-
-
+                
 
 
                 if norm[1] == '_': #precondition
@@ -666,9 +669,6 @@ if __name__ == "__main__":
                 and will be put into the norm base
             '''
             defaults = copy.deepcopy(norm_base)
-            import pdb;pdb.set_trace()
-            # import pdb;pdb.set_trace() 
-
            
 
             '''
@@ -689,12 +689,13 @@ if __name__ == "__main__":
                      
             #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
             final_result = []
+            import pdb;pdb.set_trace()
 
             for item in test_set:
                 correct_count = 0
+    
                 if len(item) == 0:
-                    import pdb;pdb.set_trace()
-                accu_result = []
+                    accu_result = []
                 for index, value in enumerate(item):
                     act = value[:-2]
                     (new_act, this_condition) = action_format(act)
@@ -705,11 +706,11 @@ if __name__ == "__main__":
                 # final = accu_result.count('1') / len(accu_result)
                 # final_result.append(final)
                 # print(final)
-                final_result.append(correct_count/len(item))
+                # final_result.append(correct_count/len(item))
                 # import pdb;pdb.set_trace() 
-                # print('accuracy:', correct_count/len(item))
-            print('total:', np.mean(final_result))
-            import pdb;pdb.set_trace() 
+                print('accuracy:', correct_count/len(item))
+            # print('total:', np.mean(final_result))
+             
         
 
 
