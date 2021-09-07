@@ -58,8 +58,12 @@ skillstype = {'skills': [16,25,34,43,52,62,71,80,89,98,108,117,126,135,144],
 'other skills': [17,26,35,44,53,63,72,81,90,99,109,118,127,136,145]}
 
 
-data_use_to_create_base = {'data': ['email', 'banking', 'healthcare', 'door locker', 'smart camera', 'call assistant', 'video call', 'location', 'voice recording', 'to do list', 'sleeping hours', 'playlists', 'thermostat', 'shopping', 'weather', '_']}
-
+data_use_to_create_base = {'data': ['email', 'banking', 'healthcare', 'door locker', 'call assistant', 'video call', 'location', 'voice recording', 'playlists', 'thermostat', 'shopping', 'weather', '_']}
+'''
+no 'smart camera', 'to do list' and 'sleeping hours',
+because in our dataset, all users answered questions in cluded these three datatypes.
+Thus we are not able to test whethet similarity fucntion works on these new added datatypes
+'''
 
 
 
@@ -290,21 +294,25 @@ def sample_split(data, target_datatype):
     '''
 
     #seed = 'email'
-    collection = []
+    # if target_datatype == 'smart camera':
+    #     import pdb; pdb.set_trace()
+    collections = []
     others = []
     for row in data:
         datatype = []
         for item in row:
-            if item[0] not in collection:
+            if item[0] not in collections:
                 datatype.append(item[0])
+        # import pdb; pdb.set_trace()
         if target_datatype in datatype:
-            collection.append(copy.deepcopy(row))
+            collections.append(copy.deepcopy(row))
         else:
             others.append(copy.deepcopy(row))
     training_set = others
-    random.shuffle(collection)
+    random.shuffle(collections)
     cut = round(len(others)/4)
-    test_set = collection[:cut]
+    test_set = collections[:cut]
+    print(len(training_set), target_datatype)
     #'./data/plain_data.csv'
 
     file1 = './data/sub_data/' + target_datatype + '_train.csv'
