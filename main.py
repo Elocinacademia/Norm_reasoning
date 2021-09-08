@@ -8,6 +8,7 @@ import re
 import pandas as pd
 import random
 import copy
+import math
 
 
 
@@ -308,7 +309,7 @@ def manhattan_distance(u, v):
     u = np.mat(u)
     v = np.mat(v)
     dist1=float(np.sum(np.abs(u - v)))
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     return dist1
 
 
@@ -348,8 +349,8 @@ def cosine_similarity(u, v):
 # import pdb;pdb.set_trace()
 
 
-def takeSecond(elem):
-    return elem[7]
+# def takeSecond(elem):
+#     return elem[7]
 
 
 def element_similarity(elem1, elem2):
@@ -370,7 +371,11 @@ def element_similarity(elem1, elem2):
             elem1_emb += embeddings_index[x]
         for order, x in enumerate(elem2):
             elem2_emb += embeddings_index[x]
-        count = cosine_similarity(elem1_emb, elem2_emb)
+        # count = cosine_similarity(elem1_emb, elem2_emb)
+        #count = euclidean_distance(elem1_emb, elem2_emb)
+        count = manhattan_distance(elem1_emb, elem2_emb)
+        #改这个地方
+
 
         # Approach2: Elementwise max
         # elem1_emb_array = []
@@ -393,8 +398,8 @@ def element_similarity(elem1, elem2):
 
         # Approach4: Average [this one is not correct]
         # for order, x in enumerate(elem1):
-            # for ordery, y in enumerate(elem2):
-                # count_list.append(cosine_similarity(embeddings_index[x],embeddings_index[y]))
+        #     for ordery, y in enumerate(elem2):
+        #         count_list.append(cosine_similarity(embeddings_index[x],embeddings_index[y]))
         # count = sum(count_list) / len(count_list)
     return count
 
@@ -415,14 +420,7 @@ def find_most_similar_action(action_list, action1):
     # action1 = ['send', 'spa', '_', 'weather_forecast', 'weather', 'primary_user', '_']
 
 
-    # embeddings_index = {}
-    # f = open('glove.6B.100d.txt')   
-    # for line in f:
-    #     values = line.split()
-    #     word = values[0]
-    #     coefs = np.asarray(values[1:], dtype='float32')
-    #     embeddings_index[word] = coefs
-    # f.close()
+   
 
     for m, act in enumerate(action_list):
         similar = []
@@ -432,8 +430,8 @@ def find_most_similar_action(action_list, action1):
         count_final.append(act)
 
 
-
-    count_final.sort(key=takeSecond, reverse=True)
+    count_final.sort(key=takeSeventh, reverse=True)
+    # import pdb;pdb.set_trace()
     most_similar = count_final[0][0:-1]
     return most_similar
 
@@ -464,7 +462,7 @@ def action_determine(action):
 
     # import pdb;pdb.set_trace()
     if key_word_data != '_':
-        for item in knowledge_base[key_word_data]['anonimised']:
+        for item in knowledge_base[key_word_data]['anonimised']:  #[shoud be data, subject]
             if item == action[5]:
                 anonimised_datas.append(item)
         for item in knowledge_base[key_word_data]['notified']:
@@ -504,9 +502,9 @@ def action_determine(action):
 
     
     #判断active_norm_base是否为空
-    possible_actions = []
     result = []
     if active_norm_base != {}:
+        possible_actions = []
         for item in active_norm_base.keys():
             l = list(item)
             if l == action:
@@ -517,7 +515,8 @@ def action_determine(action):
         if result != empty:
             return result[0]
         else:
-            most_similar_action = find_most_similar_action(possible_actions,action)
+
+            most_similar_action = find_most_similar_action(possible_actions, action)
             x = tuple(most_similar_action)
             result.append(list(active_norm_base[x].keys())[0])
             return result[0]
@@ -534,10 +533,14 @@ def action_determine(action):
                         matching_norm_base[key2] = value2
                         possible_actions_1.append(list(key2))
                         # import pdb;pdb.set_trace()
-        most_similar_action = find_most_similar_action(possible_actions_1,action)
+        most_similar_action = find_most_similar_action(possible_actions_1, action)
+        #most_similar_action = find_most_similar_action_2(possible_actions_1, action)
+        #import pdb; pdb.set_trace()
         x = tuple(most_similar_action)
         result.append(list(matching_norm_base[x].keys())[0])
         return result[0]
+
+
 
 
 
@@ -685,10 +688,11 @@ if __name__ == "__main__":
                         if key1 in ['anonimised', 'notified'] and value1 != {}:
                             for key2, value2 in value1.items():
                                 knowledge_base[datatype][key1].append(key2)
+                        # if key1 == 'notified'
                      
             #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
             final_result = []
-            
+            import pdb; pdb.set_trace()
             #for each user-based data, calculate the accuracy
             for item in test_set:
                 correct_count = 0
@@ -709,7 +713,7 @@ if __name__ == "__main__":
             print('accuracy for each dataset:', np.mean(final_result))
             accuracy_summary.append(np.mean(final_result))
     print('overall', np.mean(accuracy_summary))
-    import pdb; pdb.set_trace()
+    
             # import pdb; pdb.set_trace()
              
     
