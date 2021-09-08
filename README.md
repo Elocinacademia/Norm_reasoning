@@ -1,6 +1,6 @@
 
 
-####This is a draft code version of a normative reasoning project
+####This is a draft code version of the normative reasoning project
 ---
 
 Author: Nicole Zhan
