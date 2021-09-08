@@ -294,7 +294,7 @@ def find_most_similar_action_2(actions, this_action):
     most_similar = []
     for value in collections:
         if value[-1] == x:
-            most_similar.append(value)
+            most_similar.append(value)     
 
     return most_similar, len(most_similar)
 
@@ -376,10 +376,10 @@ def element_similarity(elem1, elem2):
             elem1_emb += embeddings_index[x]
         for order, x in enumerate(elem2):
             elem2_emb += embeddings_index[x]
-        # count = cosine_similarity(elem1_emb, elem2_emb)
+        count = cosine_similarity(elem1_emb, elem2_emb)
         #count = euclidean_distance(elem1_emb, elem2_emb)
-        count = manhattan_distance(elem1_emb, elem2_emb)
-        #改这个地方
+        #count = manhattan_distance(elem1_emb, elem2_emb)
+        #Change here
 
 
         # Approach2: Elementwise max
@@ -422,23 +422,28 @@ f.close()
 
 def find_most_similar_action(action_list, action1):
     count_final = []
+    collections = []
     # action1 = ['send', 'spa', '_', 'weather_forecast', 'weather', 'primary_user', '_']
 
    
 
-
     for m, act in enumerate(action_list):
         similar = []
-        for index, act_item in enumerate(act): #两个action之间所有的的element pair都要计算  act_item = 'healthcare_data'
+        for index, act_item in enumerate(act): 
+            #两个action之间所有的的element pair都要计算  act_item = 'healthcare_data'
             similar.append(element_similarity(act_item, action1[index]))
         act.append(sum(similar) / len(similar))
-        count_final.append(act)
+        collections.append(act)
+    
+    collections.sort(key=takeSeventh, reverse=True)
 
+    x = collections[0][-1]
+    most_similar = []
+    for value in collections:
+        if value[-1] == x:
+            most_similar.append(value)
 
-    count_final.sort(key=takeSeventh, reverse=True)
-    # import pdb;pdb.set_trace()
-    most_similar = count_final[0][0:-1]
-    return most_similar
+    return most_similar, len(most_similar)
 
 
 
@@ -455,6 +460,59 @@ def two_actions_are_same(action1, action2):
         return 'True'
     else:
         return 'False'
+
+
+def compare_confidence(actions, matching_norm_base):
+    decision_list = []
+    most_similar_one = []
+    
+    for index, act in enumerate(actions):
+        tempo = []
+        real_act = act[:-1]
+        tempo.append(real_act)
+        for key, value in matching_norm_base[tuple(real_act)].items():
+            tempo.append(key)
+            tempo.append(value[0])
+        decision_list.append(tempo)
+    decision_list.sort(key=takeThird_con, reverse=True)
+    x = decision_list[0][2][1]
+    to_judge_lift = []
+    for value in decision_list:
+        if value[2][1] == x:
+            to_judge_lift.append(value)
+    if len(to_judge_lift) == 1:
+        most_similar_one = to_judge_lift[0]
+    else:
+        to_judge_lift.sort(key=takeThird_lif, reverse=True)
+        y = to_judge_lift[0][2][1]
+        final_round = []
+        for value1 in to_judge_lift:
+            if value1[2][0] == y:
+                final_round.append(value1)
+        if len(final_round) == 1:
+            most_similar_one = final_round[0]
+        else:
+            permission = 0
+            prohibition = 0
+            allow_list_index = []
+            reject_list_index = []
+            for index ,item in enumerate(final_round):
+                if item[1] == 'p':
+                    permission += 1
+                    allow_list_index.append(index)
+                if item[1] == 'F':
+                    prohibition +=1
+                    reject_list_index.append(index)
+            if prohibition >= permission:
+                f1 = reject_list_index[0]
+                most_similar_one = final_round[f1]
+            else:
+                f2 = allow_list_index[0]
+                most_similar_one = final_round[f2]
+
+
+    y = tuple(most_similar_one) 
+    return x
 
 
 
@@ -520,9 +578,15 @@ def action_determine(action):
         if result != empty:
             return result[0]
         else:
-            most_similar_action = find_most_similar_action(possible_actions, action)
-            x = tuple(most_similar_action)
-            result.append(list(active_norm_base[x].keys())[0])
+            (most_similar_action, num) = find_most_similar_action(possible_actions, action)
+            if num == 1:
+                most_similar_one = most_similar_action[0]
+                x = tuple(most_similar_one)
+                result.append(list(active_norm_base[x].keys())[0])
+            else:
+                most_similar_one = compare_confidence(most_similar_action, matching_norm_base)
+                result.append(list(matching_norm_base[most_similar_one].keys())[0])
+ 
             return result[0]
             #找similar的norm
     else:
@@ -536,31 +600,19 @@ def action_determine(action):
                 for key2, value2 in value1.items():
                         matching_norm_base[key2] = value2
                         possible_actions_1.append(list(key2))
-                        # import pdb;pdb.set_trace()
-        most_similar_action = find_most_similar_action(possible_actions_1, action)
-        #(most_similar_actions, num) = find_most_similar_action_2(possible_actions_1, action)
-        # if num == 1:
-        #     most_similar_one = most_similar_actions[0]
-        #     x = tuple(most_similar_one)
-        #     result.append(list(matching_norm_base[x].keys())[0])
-        # else:
-        #     decision_list = []
-        #     for index, act in enumerate(most_similar_actions):
-        #         tempo = []
-        #         tempo.append(act)
-        #         for key, value in matching_norm_base[act].items():
-        #             tempo.append(key)
-        #             tempo.append(value[0][1])
-        #         decision_list.append(tempo)
-        #     decision_list.sort(key=takeThird, reverse=True)
-        #     most_similar_one = decision_list[0]
-        #     x = tuple(most_similar_one)
-        #     result.append(list(matching_norm_base[x].keys())[0])
+        
+        # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
+        (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
+        if num == 1:
+            most_similar_one = most_similar_action[0]
+            x = tuple(most_similar_one)
+            result.append(list(matching_norm_base[x].keys())[0])
+        else:
+            most_similar_one = compare_confidence(most_similar_action, matching_norm_base)
+            result.append(list(matching_norm_base[most_similar_one].keys())[0])
         #import pdb; pdb.set_trace()
-
-        x = tuple(most_similar_action)
-        result.append(list(matching_norm_base[x].keys())[0])
         return result[0]
+
 
 def norm_base_update(norm_base):
     pass
@@ -574,11 +626,17 @@ def takeSecond(elem):
     '''
     return elem[1]
 
-def takeThird(elem):
+def takeThird_con(elem):
     '''
     Take second element for sort
     '''
-    return elem[2]
+    return elem[2][1]
+
+def takeThird_lif(elem):
+    '''
+    Take second element for sort
+    '''
+    return elem[2][0]
 
 
 
@@ -674,7 +732,7 @@ if __name__ == "__main__":
                 # norm = [modality, precondition, action, effect, confidence]
                 norm_collection.append(norm)
                 action_collection.append(action)
-                import pdb;pdb.set_trace()
+                # import pdb;pdb.set_trace()
                 
 
 
