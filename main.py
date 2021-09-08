@@ -9,7 +9,7 @@ import pandas as pd
 import random
 import copy
 import math
-
+from random import choice
 
 
 from efficient_apriori import apriori
@@ -260,36 +260,43 @@ def norm_format(conditions, acceptbility, formatted_action, values):
 
 
 
-def similar_type_1(action1, action_list):
-    '''
-    This is the first type of method to calculate the similarity between two actions.
-    *** How many parameters they have are same ***
-    '''
 
-    count_final = []
-    similar_summary = []
-    similar_for_each_action = []
-
-    for act in action_list:
-        count = 0
-        for index, act_item in enumerate(act):
-            if act_item == action1[index]:
-                count += 1
-                # import pdb;pdb.set_trace()
-        count_final.insert(0,count)
-        similar_for_each_action = act + count_final[:1]
-        similar_summary.append(similar_for_each_action)
-        # import pdb;pdb.set_trace()
-  
-
-    similar_summary.sort(key=takeSecond, reverse=True)
-    the_most_similar_action = similar_summary[0][0:-1]
+def parameter_calculation(action1, action2):
+    count = 0
+    if len(action1) == len(action2):
+        for index, element in enumerate(action1):
+            if element == action2[index]:
+                count +=1
+    else:
+        print("Wrongly formatted action found!", action1)
     
-
-    return the_most_similar_action
-    #return 最similar的action(只有一个)
+    return count
 
 
+def find_most_similar_action_2(actions, this_action):
+    '''
+    This is the first type of method to find the most similar action.
+    *** How many parameters they have are same ***
+    如果最大的值有多个：action1 和action2都有5个parameters和this_action相同怎么办 所以应该返回一个list
+
+    '''
+    collections = []
+    for value in actions:
+        l = []
+        same_parameters = parameter_calculation(value, this_action)
+        l = copy.deepcopy(value)
+        l.append(same_parameters)
+        collections.append(l)
+
+    collections.sort(key=takeSeventh, reverse=True)
+    # import pdb;pdb.set_trace()
+    x = collections[0][-1]
+    most_similar = []
+    for value in collections:
+        if value[-1] == x:
+            most_similar.append(value)
+
+    return most_similar, len(most_similar)
 
 
 
@@ -349,8 +356,6 @@ def cosine_similarity(u, v):
 # import pdb;pdb.set_trace()
 
 
-# def takeSecond(elem):
-#     return elem[7]
 
 
 def element_similarity(elem1, elem2):
@@ -419,8 +424,8 @@ def find_most_similar_action(action_list, action1):
     count_final = []
     # action1 = ['send', 'spa', '_', 'weather_forecast', 'weather', 'primary_user', '_']
 
-
    
+
 
     for m, act in enumerate(action_list):
         similar = []
@@ -515,7 +520,6 @@ def action_determine(action):
         if result != empty:
             return result[0]
         else:
-
             most_similar_action = find_most_similar_action(possible_actions, action)
             x = tuple(most_similar_action)
             result.append(list(active_norm_base[x].keys())[0])
@@ -534,14 +538,32 @@ def action_determine(action):
                         possible_actions_1.append(list(key2))
                         # import pdb;pdb.set_trace()
         most_similar_action = find_most_similar_action(possible_actions_1, action)
-        #most_similar_action = find_most_similar_action_2(possible_actions_1, action)
+        #(most_similar_actions, num) = find_most_similar_action_2(possible_actions_1, action)
+        # if num == 1:
+        #     most_similar_one = most_similar_actions[0]
+        #     x = tuple(most_similar_one)
+        #     result.append(list(matching_norm_base[x].keys())[0])
+        # else:
+        #     decision_list = []
+        #     for index, act in enumerate(most_similar_actions):
+        #         tempo = []
+        #         tempo.append(act)
+        #         for key, value in matching_norm_base[act].items():
+        #             tempo.append(key)
+        #             tempo.append(value[0][1])
+        #         decision_list.append(tempo)
+        #     decision_list.sort(key=takeThird, reverse=True)
+        #     most_similar_one = decision_list[0]
+        #     x = tuple(most_similar_one)
+        #     result.append(list(matching_norm_base[x].keys())[0])
         #import pdb; pdb.set_trace()
+
         x = tuple(most_similar_action)
         result.append(list(matching_norm_base[x].keys())[0])
         return result[0]
 
-
-
+def norm_base_update(norm_base):
+    pass
 
 
 
@@ -551,6 +573,15 @@ def takeSecond(elem):
     Take second element for sort
     '''
     return elem[1]
+
+def takeThird(elem):
+    '''
+    Take second element for sort
+    '''
+    return elem[2]
+
+
+
 
 def takeSeventh(elem):
     '''
@@ -578,10 +609,17 @@ def load_test(datatype):
         return all_data
 
 
+def random_baseline():
+    l = ['F', 'P']
+    return choice(l)
+
+
+
 if __name__ == "__main__":
 
     # all_data = data_input('./data/new_file.csv')
     accuracy_summary = []
+    random_accu_summary = []
     for index, item in enumerate(data_use_to_create_base['data'][:-1]):
         if item not in ['smart camera', 'to do list', 'sleeping hours']:
             # (training_set, test_set) = sample_split(all_data, item)
@@ -636,6 +674,7 @@ if __name__ == "__main__":
                 # norm = [modality, precondition, action, effect, confidence]
                 norm_collection.append(norm)
                 action_collection.append(action)
+                import pdb;pdb.set_trace()
                 
 
 
@@ -692,8 +731,10 @@ if __name__ == "__main__":
                      
             #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
             final_result = []
-            import pdb; pdb.set_trace()
+            
             #for each user-based data, calculate the accuracy
+            
+
             for item in test_set:
                 correct_count = 0
                 accu_result = []
@@ -713,6 +754,7 @@ if __name__ == "__main__":
             print('accuracy for each dataset:', np.mean(final_result))
             accuracy_summary.append(np.mean(final_result))
     print('overall', np.mean(accuracy_summary))
+
     
             # import pdb; pdb.set_trace()
              
