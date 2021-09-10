@@ -24,5 +24,5 @@ Started From: July 6th
 + Theaccuracy of using Euclidean distance is also 0.5688070313833156
 + overall ~~0.58 now
 
-
+Move to: change the norm base update functions
 
