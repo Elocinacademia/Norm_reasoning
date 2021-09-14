@@ -503,6 +503,7 @@ def compare_confidence(actions, matching_norm_base):
                 if item[1] == 'F':
                     prohibition +=1
                     reject_list_index.append(index)
+            import pdb; pdb.set_trace()
             if prohibition >= permission:
                 f1 = reject_list_index[0]
                 most_similar_one = final_round[f1]
@@ -615,7 +616,16 @@ def action_determine(action):
 
 
 def norm_base_update(norm_base):
-    pass
+    #Eliminate the duplicates or multiple values of a norm
+    #unfinished
+    for key1, value1 in norm_base.items():
+        for key2, value2 in value1.items():
+            if value2[key2] == "_":
+                print('no')
+
+
+
+    return norm_base
 
 
 
