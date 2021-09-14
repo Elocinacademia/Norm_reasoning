@@ -833,29 +833,34 @@ if __name__ == "__main__":
 
 
 
-    #Knowledge base : add and remove
-
-    #Knowledge base: When new actions are monitored
-    #new actions look like: (email, parents, no purpose&no condition, prime user,Acceptable)
-
-    # new_action_list = []
-
-    # for i in test_set:
-    #     #item = ['healthcare', 'advertising agencies', 'with purpose&no condition', 'prime user', 'Acceptable']
-    #     #i[0] = data
-    #     #i[3] = subject
-    #     n = [i[0], i[1], i[2], i[3]]
-    #     #i[4] = acceptable
-    #     (new_act_monitored, new_act_condition) = action_format(n)
-    #     new_norm_from_new_act = norm_format(new_act_condition, i[4], new_act_monitored, [])
-    #     #new_norm_from_new_act is used to compare user perceptions(new_norm_from_new_act[0]) with NSA results
-    #     new_action_list.append(new_act_monitored)
-    #     import pdb;pdb.set_trace()
+#for tomorrow to check
 
 
-    # for i in new_action_list:
-    #     # import pdb;pdb.set_trace()
-    #     result = action_determine(norm_base, knowledge_base, i)
+
+
+    Knowledge base : add and remove
+
+    Knowledge base: When new actions are monitored
+    new actions look like: (email, parents, no purpose&no condition, prime user,Acceptable)
+
+    new_action_list = []
+
+    for i in test_set:
+        #item = ['healthcare', 'advertising agencies', 'with purpose&no condition', 'prime user', 'Acceptable']
+        #i[0] = data
+        #i[3] = subject
+        n = [i[0], i[1], i[2], i[3]]
+        #i[4] = acceptable
+        (new_act_monitored, new_act_condition) = action_format(n)
+        new_norm_from_new_act = norm_format(new_act_condition, i[4], new_act_monitored, [])
+        #new_norm_from_new_act is used to compare user perceptions(new_norm_from_new_act[0]) with NSA results
+        new_action_list.append(new_act_monitored)
+        import pdb;pdb.set_trace()
+
+
+    for i in new_action_list:
+        # import pdb;pdb.set_trace()
+        result = action_determine(norm_base, knowledge_base, i)
 
         
 
