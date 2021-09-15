@@ -472,6 +472,8 @@ def compare_confidence(actions, matching_norm_base):
         1.1.如果confidence相同再比较lift
     2.如果两个值都相同，且他们的modality都是P 则结果为P
         2.1.如果其中一个modality是F 则选择F
+
+    function return: most similar action
     '''
     decision_list = []
     most_similar_one = []
