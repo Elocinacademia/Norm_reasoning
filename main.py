@@ -463,6 +463,16 @@ def two_actions_are_same(action1, action2):
 
 
 def compare_confidence(actions, matching_norm_base):
+    '''
+    当用不同的方法计算完similarity之后，
+    我们发现，有多个相似的action与之对应，这些action都含有相同的similarity值
+    所以需要比较他们的confidence和lift值 来决定选择哪一个
+
+    1.先比较confidence
+        1.1.如果confidence相同再比较lift
+    2.如果两个值都相同，且他们的modality都是P 则结果为P
+        2.1.如果其中一个modality是F 则选择F
+    '''
     decision_list = []
     most_similar_one = []
     
@@ -477,6 +487,7 @@ def compare_confidence(actions, matching_norm_base):
     decision_list.sort(key=takeThird_con, reverse=True)
     x = decision_list[0][2][1]
     to_judge_lift = []
+    import pdb; pdb.set_trace()
     for value in decision_list:
         if value[2][1] == x:
             to_judge_lift.append(value)
@@ -503,7 +514,6 @@ def compare_confidence(actions, matching_norm_base):
                 if item[1] == 'F':
                     prohibition +=1
                     reject_list_index.append(index)
-            import pdb; pdb.set_trace()
             if prohibition >= permission:
                 f1 = reject_list_index[0]
                 most_similar_one = final_round[f1]
@@ -728,7 +738,7 @@ if __name__ == "__main__":
             
             norm_collection = []
             action_collection = []
-            #测试用 initial_rules
+            # 'initial_rules' is used for preliminary testing
             for index, item in enumerate(initial_rules_2):
             #for item in initial_rules:
                 #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
@@ -838,58 +848,34 @@ if __name__ == "__main__":
 
 
 
-    Knowledge base : add and remove
+    # Knowledge base : add and remove
 
-    Knowledge base: When new actions are monitored
-    new actions look like: (email, parents, no purpose&no condition, prime user,Acceptable)
+    # Knowledge base: When new actions are monitored
+    # new actions look like: (email, parents, no purpose&no condition, prime user,Acceptable)
 
-    new_action_list = []
+    # new_action_list = []
 
-    for i in test_set:
-        #item = ['healthcare', 'advertising agencies', 'with purpose&no condition', 'prime user', 'Acceptable']
-        #i[0] = data
-        #i[3] = subject
-        n = [i[0], i[1], i[2], i[3]]
-        #i[4] = acceptable
-        (new_act_monitored, new_act_condition) = action_format(n)
-        new_norm_from_new_act = norm_format(new_act_condition, i[4], new_act_monitored, [])
-        #new_norm_from_new_act is used to compare user perceptions(new_norm_from_new_act[0]) with NSA results
-        new_action_list.append(new_act_monitored)
-        import pdb;pdb.set_trace()
+    # for i in test_set:
+    #     #item = ['healthcare', 'advertising agencies', 'with purpose&no condition', 'prime user', 'Acceptable']
+    #     #i[0] = data
+    #     #i[3] = subject
+    #     n = [i[0], i[1], i[2], i[3]]
+    #     #i[4] = acceptable
+    #     (new_act_monitored, new_act_condition) = action_format(n)
+    #     new_norm_from_new_act = norm_format(new_act_condition, i[4], new_act_monitored, [])
+    #     #new_norm_from_new_act is used to compare user perceptions(new_norm_from_new_act[0]) with NSA results
+    #     new_action_list.append(new_act_monitored)
+    #     import pdb;pdb.set_trace()
 
 
-    for i in new_action_list:
-        # import pdb;pdb.set_trace()
-        result = action_determine(norm_base, knowledge_base, i)
+    # for i in new_action_list:
+    #     # import pdb;pdb.set_trace()
+    #     result = action_determine(norm_base, knowledge_base, i)
 
         
 
 
 
-
-    
-
-    n = 3
-
-left = 0
-right_down = 2*n-1
-up = 0
-down = n-1
-
-matrix = [ [0]*n for i in range(n)]
-for i in range(1,n**2):
-    while i <=n:
-        matrix[0][i-1] = i
-        i +=1
-    while n < i < right_down:
-        j = 1
-        while j<=n-1:
-            matrix[j][n-1] = i
-            j+=1
-            i+=1
-    while right_down =< i < 3*n-2:
-        matrix[n-1]
-import pdb; pdb.set_trace()
 
 
 
