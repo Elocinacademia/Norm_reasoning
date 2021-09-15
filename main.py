@@ -477,7 +477,7 @@ def compare_confidence(actions, matching_norm_base):
     '''
     decision_list = []
     most_similar_one = []
-    
+
     for index, act in enumerate(actions):
         tempo = []
         real_act = act[:-1]
@@ -487,24 +487,34 @@ def compare_confidence(actions, matching_norm_base):
             tempo.append(value[0])
         decision_list.append(tempo)
     decision_list.sort(key=takeThird_con, reverse=True)
-    x = decision_list[0][2][1]
+    x = decision_list[0][2][1]  #compare the confidence value
     to_judge_lift = []
-    import pdb; pdb.set_trace()
+
+
     for value in decision_list:
         if value[2][1] == x:
             to_judge_lift.append(value)
+
     if len(to_judge_lift) == 1:
-        most_similar_one = to_judge_lift[0]
+        most_similar_one = to_judge_lift[0][0]
     else:
         to_judge_lift.sort(key=takeThird_lif, reverse=True)
-        y = to_judge_lift[0][2][1]
+        y = to_judge_lift[0][2][0]  #compare the lift value
         final_round = []
         for value1 in to_judge_lift:
             if value1[2][0] == y:
                 final_round.append(value1)
         if len(final_round) == 1:
-            most_similar_one = final_round[0]
+            most_similar_one = final_round[0][0]
         else:
+            '''
+            if more than one norms have same lift and confidence value
+            Compare the number of P and F
+            if n(P) > F:
+                return the first action with P
+            else:
+                return the firsr action with F
+            '''
             permission = 0
             prohibition = 0
             allow_list_index = []
@@ -518,14 +528,14 @@ def compare_confidence(actions, matching_norm_base):
                     reject_list_index.append(index)
             if prohibition >= permission:
                 f1 = reject_list_index[0]
-                most_similar_one = final_round[f1]
+                most_similar_one = final_round[f1][0]
             else:
                 f2 = allow_list_index[0]
-                most_similar_one = final_round[f2]
+                most_similar_one = final_round[f2][0]
 
 
-    y = tuple(most_similar_one) 
-    return x
+    y = tuple(most_similar_one)
+    return y
 
 
 
@@ -741,8 +751,8 @@ if __name__ == "__main__":
             norm_collection = []
             action_collection = []
             # 'initial_rules' is used for preliminary testing
-            for index, item in enumerate(initial_rules_2):
-            #for item in initial_rules:
+            # for index, item in enumerate(initial_rules_2):
+            for item in initial_rules:
                 #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
                 # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
                 # e.g.: item[1] = ['Acceptable']
@@ -798,11 +808,21 @@ if __name__ == "__main__":
             '''
 
 
-            # import pdb;pdb.set_trace()
+            
             knowledge_base = {}
             for datatype, subdict in defaults.items():
                 if datatype != '_':
                     knowledge_base[datatype] = {'anonimised':[], 'notified': []}
+                    '''
+                    Knowledge base only contains the preconditions mentioned
+                    e.g. anonimised(data, subject)
+                        notified(Actor,Subject,Action)
+                    '''
+                    for key1, value1 in subdict.items():
+                        if key1 == 'anonimised' and value1 != {}:
+                            import pdb;pdb.set_trace()
+
+
                     for key1, value1 in subdict.items():
                         if key1 in ['anonimised', 'notified'] and value1 != {}:
                             for key2, value2 in value1.items():
@@ -810,11 +830,10 @@ if __name__ == "__main__":
                         # if key1 == 'notified'
                      
             #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
+            
+            
+            
             final_result = []
-            
-            #for each user-based data, calculate the accuracy
-            
-
             for item in test_set:
                 correct_count = 0
                 accu_result = []
