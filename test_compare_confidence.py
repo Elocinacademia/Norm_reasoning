@@ -5,6 +5,15 @@ import pandas as pd
 
 
 
+initial_rules = [[[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.89, 0.76]], [[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.99, 0.99]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Uncceptable'], [1.44, 0.52]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Acceptable'], [1.13, 0.62]], [['call assistant', 'prime user'], ['Acceptable'], [1.17, 0.64]], [['email', 'prime user'], ['Acceptable'], [1.21, 0.66]], [['no purpose&no condition', 'other skills'], ['Acceptable'], [1.25, 0.68]], [['other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['banking', 'prime user'], ['Acceptable'], [1.31, 0.71]], [['no purpose&no condition', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'weather', 'with purpose&condition4'], ['Unacceptable'], [1.39, 0.63]], [['advertising agencies', 'prime user'], ['Acceptable'], [1.44, 0.79]], [['prime user', 'visitors in general'], ['Acceptable'], [1.46, 0.8]], [['voice recording'], ['Acceptable'], [1.13, 0.62]], [['call assistant'], ['Acceptable'], [1.17, 0.64]], [['email'], ['Acceptable'], [1.21, 0.66]], [['other skills'], ['Acceptable'], [1.25, 0.68]], [['banking'], ['Acceptable'], [1.31, 0.71]], [['skills'], ['Unacceptable'], [1.33, 0.61]], [['weather'], ['Unacceptable'], [1.39, 0.77]], [['advertising agencies'], ['Acceptable'], [1.44, 0.79]], [['visitors in general'], ['Acceptable'], [1.46, 0.8]], [['no purpose&no condition', 'other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['no purpose&no condition', 'prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['parents', 'shopping', 'with purpose&condition1'], ['Acceptable'], [1.45, 0.98]] ,[['shopping', 'with purpose&condition5'], ['Unacceptable'], [1.33, 0.38]] ,[['shopping'], ['Unacceptable'], [1.32, 0.57]]]
+
+
+
+
+
+
+
+
 
 def takeThird_con(elem):
     '''

@@ -16,7 +16,13 @@ from efficient_apriori import apriori
 
 random.seed(1)
 
-initial_rules = [[[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.99, 0.99]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Uncceptable'], [1.44, 0.52]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Acceptable'], [1.13, 0.62]], [['call assistant', 'prime user'], ['Acceptable'], [1.17, 0.64]], [['email', 'prime user'], ['Acceptable'], [1.21, 0.66]], [['no purpose&no condition', 'other skills'], ['Acceptable'], [1.25, 0.68]], [['other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['banking', 'prime user'], ['Acceptable'], [1.31, 0.71]], [['no purpose&no condition', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'weather', 'with purpose&condition4'], ['Unacceptable'], [1.39, 0.63]], [['advertising agencies', 'prime user'], ['Acceptable'], [1.44, 0.79]], [['prime user', 'visitors in general'], ['Acceptable'], [1.46, 0.8]], [['voice recording'], ['Acceptable'], [1.13, 0.62]], [['call assistant'], ['Acceptable'], [1.17, 0.64]], [['email'], ['Acceptable'], [1.21, 0.66]], [['other skills'], ['Acceptable'], [1.25, 0.68]], [['banking'], ['Acceptable'], [1.31, 0.71]], [['skills'], ['Unacceptable'], [1.33, 0.61]], [['weather'], ['Unacceptable'], [1.39, 0.77]], [['advertising agencies'], ['Acceptable'], [1.44, 0.79]], [['visitors in general'], ['Acceptable'], [1.46, 0.8]], [['no purpose&no condition', 'other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['no purpose&no condition', 'prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['parents', 'shopping', 'with purpose&condition1'], ['Acceptable'], [1.45, 0.98]] ,[['shopping', 'with purpose&condition5'], ['Unacceptable'], [1.33, 0.38]] ,[['shopping'], ['Unacceptable'], [1.32, 0.57]]]
+initial_rules = [[[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.89, 0.76]], [[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.99, 0.99]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Uncceptable'], [1.44, 0.52]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Acceptable'], [1.13, 0.62]], [['call assistant', 'prime user'], ['Acceptable'], [1.17, 0.64]], [['email', 'prime user'], ['Acceptable'], [1.21, 0.66]], [['no purpose&no condition', 'other skills'], ['Acceptable'], [1.25, 0.68]], [['other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['banking', 'prime user'], ['Acceptable'], [1.31, 0.71]], [['no purpose&no condition', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'weather', 'with purpose&condition4'], ['Unacceptable'], [1.39, 0.63]], [['advertising agencies', 'prime user'], ['Acceptable'], [1.44, 0.79]], [['prime user', 'visitors in general'], ['Acceptable'], [1.46, 0.8]], [['voice recording'], ['Acceptable'], [1.13, 0.62]], [['call assistant'], ['Acceptable'], [1.17, 0.64]], [['email'], ['Acceptable'], [1.21, 0.66]], [['other skills'], ['Acceptable'], [1.25, 0.68]], [['banking'], ['Acceptable'], [1.31, 0.71]], [['skills'], ['Unacceptable'], [1.33, 0.61]], [['weather'], ['Unacceptable'], [1.39, 0.77]], [['advertising agencies'], ['Acceptable'], [1.44, 0.79]], [['visitors in general'], ['Acceptable'], [1.46, 0.8]], [['no purpose&no condition', 'other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['no purpose&no condition', 'prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['parents', 'shopping', 'with purpose&condition1'], ['Acceptable'], [1.45, 0.98]] ,[['shopping', 'with purpose&condition5'], ['Unacceptable'], [1.33, 0.38]] ,[['shopping'], ['Unacceptable'], [1.32, 0.57]]]
+
+
+
+# initial_rules = [[[ 'voice recording', 'partner', 'with purpose&condition2'], ['Acceptable'], [1.99, 0.99]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Uncceptable'], [1.44, 0.52]], [['prime user', 'voice recording', 'with purpose&condition2'], ['Acceptable'], [1.13, 0.62]], [['call assistant', 'prime user'], ['Acceptable'], [1.17, 0.64]], [['email', 'prime user'], ['Acceptable'], [1.21, 0.66]], [['no purpose&no condition', 'other skills'], ['Acceptable'], [1.25, 0.68]], [['other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['banking', 'prime user'], ['Acceptable'], [1.31, 0.71]], [['no purpose&no condition', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['prime user', 'weather', 'with purpose&condition4'], ['Unacceptable'], [1.39, 0.63]], [['advertising agencies', 'prime user'], ['Acceptable'], [1.44, 0.79]], [['prime user', 'visitors in general'], ['Acceptable'], [1.46, 0.8]], [['voice recording'], ['Acceptable'], [1.13, 0.62]], [['call assistant'], ['Acceptable'], [1.17, 0.64]], [['email'], ['Acceptable'], [1.21, 0.66]], [['other skills'], ['Acceptable'], [1.25, 0.68]], [['banking'], ['Acceptable'], [1.31, 0.71]], [['skills'], ['Unacceptable'], [1.33, 0.61]], [['weather'], ['Unacceptable'], [1.39, 0.77]], [['advertising agencies'], ['Acceptable'], [1.44, 0.79]], [['visitors in general'], ['Acceptable'], [1.46, 0.8]], [['no purpose&no condition', 'other skills', 'prime user'], ['Acceptable'], [1.25, 0.68]], [['no purpose&no condition', 'prime user', 'skills'], ['Unacceptable'], [1.33, 0.61]], [['parents', 'shopping', 'with purpose&condition1'], ['Acceptable'], [1.45, 0.98]] ,[['shopping', 'with purpose&condition5'], ['Unacceptable'], [1.33, 0.38]] ,[['shopping'], ['Unacceptable'], [1.32, 0.57]]]
+
+
 
 
 
@@ -642,11 +648,17 @@ def norm_base_update(norm_base):
     #unfinished
     for key1, value1 in norm_base.items():
         for key2, value2 in value1.items():
-            if value2[key2] == "_":
-                print('no')
+            for key3, value3 in value2.items():
+                for key4, value4 in value3.items():
+                    for key5, value5 in value4.items():
+                        if len(value5)>1:
+                            value5.sort(key=takeSecond, reverse=True)
+                            new_list = []
+                            new_list.append(value5[0])
+                            norm_base[key1][key2][key3][key4][key5] = new_list
+                            import pdb; pdb.set_trace()
 
-
-
+                    #2021/09/15
     return norm_base
 
 
@@ -807,8 +819,6 @@ if __name__ == "__main__":
             knowledge base only keeps the preconditions hold by the SPA
             '''
 
-
-            
             knowledge_base = {}
             for datatype, subdict in defaults.items():
                 if datatype != '_':
@@ -827,14 +837,9 @@ if __name__ == "__main__":
                             for key2, value2 in value1.items():
                                 for key3, value3 in value2.items():
                                     knowledge_base[datatype]['notified'].append(list(key3))
-                                    import pdb;pdb.set_trace()
 
-
-
-                     
-            #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
-            
-            
+            latest_norm_base = norm_base_update(norm_base)
+         
             
             final_result = []
             for item in test_set:
