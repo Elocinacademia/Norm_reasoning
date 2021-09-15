@@ -820,14 +820,17 @@ if __name__ == "__main__":
                     '''
                     for key1, value1 in subdict.items():
                         if key1 == 'anonimised' and value1 != {}:
-                            import pdb;pdb.set_trace()
-
-
-                    for key1, value1 in subdict.items():
-                        if key1 in ['anonimised', 'notified'] and value1 != {}:
                             for key2, value2 in value1.items():
-                                knowledge_base[datatype][key1].append(key2)
-                        # if key1 == 'notified'
+                                if key2 not in knowledge_base[datatype]['anonimised']:
+                                    knowledge_base[datatype]['anonimised'].append(key2)
+                        if key1 == 'notified' and value1 != {}:
+                            for key2, value2 in value1.items():
+                                for key3, value3 in value2.items():
+                                    knowledge_base[datatype]['notified'].append(list(key3))
+                                    import pdb;pdb.set_trace()
+
+
+
                      
             #检查knowledge base中是否有相应的precondition 如果有返回True 如果没有返回False
             
