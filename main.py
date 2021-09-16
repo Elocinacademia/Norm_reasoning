@@ -603,6 +603,21 @@ def action_determine(action):
             if norm_base[key_word_data]['anonimised'][item]:
                 for keys, values in norm_base[key_word_data]['anonimised'][item].items():
                     active_norm_base[keys] = values
+                    # import pdb; pdb.set_trace()
+    if notified_datas[0] == 'true':
+        for key1, value1 in norm_base[key_word_data]['notified'].items():
+            for key2, value2 in value1.items():
+                if list(key2) == action:
+                    active_norm_base[key2] = value2
+
+
+
+
+    if anonimised_datas != empty:
+        for item in anonimised_datas:
+            if norm_base[key_word_data]['anonimised'][item]:
+                for keys, values in norm_base[key_word_data]['anonimised'][item].items():
+                    active_norm_base[keys] = values
     if notified_datas != empty:
         for item in notified_datas:
             if norm_base[key_word_data]['notified'][item]:
