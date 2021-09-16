@@ -549,6 +549,12 @@ def action_determine(action):
     #e.g.: action = ['send', 'spa', 'other skills', 'to_do', 'to do list', 'primary_user', '_']
     key_word_data = action[4]
 
+    '''
+    Note that, at this moment, the anonimised datas and notified datas only based on the action called by this function
+    so we don't need to store the specific datatype in these two lists again
+    the datatype is always the key_word_data
+    '''
+    import pdb;pdb.set_trace()
     anonimised_datas = []
     notified_datas = []
 
@@ -562,13 +568,15 @@ def action_determine(action):
     '''
     if key_word_data != '_':
         for item in knowledge_base[key_word_data]['anonimised']:  #[shoud be data, subject]
-            if item == action[5]:
+            if action[5] == item:
                 anonimised_datas.append(item)
         for item in knowledge_base[key_word_data]['notified']:   #should be action
-            if item == action[5]:
-                notified_datas.append(item)
-    
+            if item == action:
+                notified_datas.append('true')  #don't need to append the action again, we only need to inform that this precondition was satisfied
     '''
+
+
+
     First: find the relevant preconditions in the knowledge base;
             If exist: find active norms in the norm base
                 Active norms base:
@@ -774,8 +782,8 @@ if __name__ == "__main__":
             norm_collection = []
             action_collection = []
             # 'initial_rules' is used for preliminary testing
-            # for index, item in enumerate(initial_rules_2):
-            for item in initial_rules:
+            for index, item in enumerate(initial_rules_2):
+            #for item in initial_rules:
                 #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
                 # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
                 # e.g.: item[1] = ['Acceptable']
