@@ -557,7 +557,7 @@ def action_determine(action):
         for item in knowledge_base[key_word_data]['anonimised']:  #[shoud be data, subject]
             if item == action[5]:
                 anonimised_datas.append(item)
-        for item in knowledge_base[key_word_data]['notified']:
+        for item in knowledge_base[key_word_data]['notified']:   #should be action
             if item == action[5]:
                 notified_datas.append(item)
     
@@ -652,14 +652,12 @@ def norm_base_update(norm_base):
                 for key4, value4 in value3.items():
                     for key5, value5 in value4.items():
                         if len(value5)>1:
-
                             value5.sort(key=takeSecond, reverse=True)
                             new_list = []
                             new_list.append(value5[0])
                             norm_base[key1][key2][key3][key4][key5] = new_list
-                            import pdb; pdb.set_trace()
+                            # import pdb; pdb.set_trace()
 
-                    #2021/09/15
     return norm_base
 
 
@@ -839,11 +837,12 @@ if __name__ == "__main__":
                                 for key3, value3 in value2.items():
                                     knowledge_base[datatype]['notified'].append(list(key3))
 
-            # latest_norm_base = norm_base_update(norm_base)
+            norm_base = norm_base_update(norm_base)   #to eliminate all the possible duplicates
+
+
          
             
             final_result = []
-            import pdb; pdb.set_trace()
             for item in test_set:
                 correct_count = 0
                 accu_result = []
@@ -851,6 +850,7 @@ if __name__ == "__main__":
                     act = value[:-2]
                     (new_act, this_condition) = action_format(act)
                     result = action_determine(new_act)
+                    # import pdb; pdb.set_trace()
                     accuracy = accuracy_verify(result, value[4])
                     accu_result.append(accuracy)
                 correct_count += accu_result.count('1') 
@@ -863,6 +863,7 @@ if __name__ == "__main__":
             print('accuracy for each dataset:', np.mean(final_result))
             accuracy_summary.append(np.mean(final_result))
     print('overall', np.mean(accuracy_summary))
+    import pdb; pdb.set_trace()
 
     
             # import pdb; pdb.set_trace()
