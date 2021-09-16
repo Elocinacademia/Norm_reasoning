@@ -652,7 +652,7 @@ def norm_base_update(norm_base):
                 for key4, value4 in value3.items():
                     for key5, value5 in value4.items():
                         if len(value5)>1:
-                            import pdb; pdb.set_trace()
+
                             value5.sort(key=takeSecond, reverse=True)
                             new_list = []
                             new_list.append(value5[0])
@@ -764,8 +764,8 @@ if __name__ == "__main__":
             norm_collection = []
             action_collection = []
             # 'initial_rules' is used for preliminary testing
-            # for index, item in enumerate(initial_rules_2):
-            for item in initial_rules:
+            for index, item in enumerate(initial_rules_2):
+            # for item in initial_rules:
                 #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
                 # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
                 # e.g.: item[1] = ['Acceptable']
@@ -839,10 +839,11 @@ if __name__ == "__main__":
                                 for key3, value3 in value2.items():
                                     knowledge_base[datatype]['notified'].append(list(key3))
 
-            latest_norm_base = norm_base_update(norm_base)
+            # latest_norm_base = norm_base_update(norm_base)
          
             
             final_result = []
+            import pdb; pdb.set_trace()
             for item in test_set:
                 correct_count = 0
                 accu_result = []
