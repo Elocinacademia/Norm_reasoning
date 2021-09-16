@@ -609,23 +609,22 @@ def action_determine(action):
             for key2, value2 in value1.items():
                 if list(key2) == action:
                     active_norm_base[key2] = value2
-
-
-
-
-    if anonimised_datas != empty:
-        for item in anonimised_datas:
-            if norm_base[key_word_data]['anonimised'][item]:
-                for keys, values in norm_base[key_word_data]['anonimised'][item].items():
-                    active_norm_base[keys] = values
-    if notified_datas != empty:
-        for item in notified_datas:
-            if norm_base[key_word_data]['notified'][item]:
-                for keys, values in norm_base[key_word_data]['notified'][item].items():
-                    active_norm_base[keys] = values
     if norm_base[key_word_data]['_']['_'] != {}:
         for keys, values in norm_base[key_word_data]['_']['_'].items():
             active_norm_base[keys] = values
+
+    #Previous code (may be deleted later)
+    # if anonimised_datas != empty:
+    #     for item in anonimised_datas:
+    #         if norm_base[key_word_data]['anonimised'][item]:
+    #             for keys, values in norm_base[key_word_data]['anonimised'][item].items():
+    #                 active_norm_base[keys] = values
+    # if notified_datas != empty:
+    #     for item in notified_datas:
+    #         if norm_base[key_word_data]['notified'][item]:
+    #             for keys, values in norm_base[key_word_data]['notified'][item].items():
+    #                 active_norm_base[keys] = values
+    
 
     
     #判断active_norm_base是否为空
