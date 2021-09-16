@@ -554,7 +554,7 @@ def action_determine(action):
     so we don't need to store the specific datatype in these two lists again
     the datatype is always the key_word_data
     '''
-    import pdb;pdb.set_trace()
+    
     anonimised_datas = []
     notified_datas = []
 
@@ -598,6 +598,7 @@ def action_determine(action):
 
 
     empty = []
+    # import pdb;pdb.set_trace()
     if anonimised_datas != empty:
         for item in anonimised_datas:
             if norm_base[key_word_data]['anonimised'][item]:
@@ -871,7 +872,7 @@ if __name__ == "__main__":
                                 for key3, value3 in value2.items():
                                     knowledge_base[datatype]['notified'].append(list(key3))
 
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             norm_base = norm_base_update(norm_base)   #to eliminate all the possible duplicates
 
 
