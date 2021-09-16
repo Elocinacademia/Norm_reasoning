@@ -652,6 +652,7 @@ def norm_base_update(norm_base):
                 for key4, value4 in value3.items():
                     for key5, value5 in value4.items():
                         if len(value5)>1:
+                            import pdb; pdb.set_trace()
                             value5.sort(key=takeSecond, reverse=True)
                             new_list = []
                             new_list.append(value5[0])
