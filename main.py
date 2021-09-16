@@ -668,8 +668,9 @@ def action_determine(action):
         # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
         (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
         if num == 1:
-            most_similar_one = most_similar_action[0]
+            most_similar_one = most_similar_action[0][:-1]
             x = tuple(most_similar_one)
+            # import pdb; pdb.set_trace()
             result.append(list(matching_norm_base[x].keys())[0])
         else:
             most_similar_one = compare_confidence(most_similar_action, matching_norm_base)
