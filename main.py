@@ -553,6 +553,13 @@ def action_determine(action):
     notified_datas = []
 
     # import pdb;pdb.set_trace()
+    '''
+    Knowledge base is something like this:
+    {'voice recording': {'anonimised': ['primary_user'], 'notified': []}, 
+    'shopping': {'anonimised': [], 'notified': [['send', 'spa', 'parents', 'online_shopping', 'shopping', 'primary_user', 'with the purpose of knowing the data']]}, 
+    'weather': {'anonimised': [], 'notified': []}}
+
+    '''
     if key_word_data != '_':
         for item in knowledge_base[key_word_data]['anonimised']:  #[shoud be data, subject]
             if item == action[5]:
@@ -577,6 +584,11 @@ def action_determine(action):
 
     #如果precondition在knowlege base中已经存在， 那么将active norm放入active norm base中
     #anonimised_datas= ['primary_user','bob']
+
+
+
+
+
     empty = []
     if anonimised_datas != empty:
         for item in anonimised_datas:
@@ -762,8 +774,8 @@ if __name__ == "__main__":
             norm_collection = []
             action_collection = []
             # 'initial_rules' is used for preliminary testing
-            for index, item in enumerate(initial_rules_2):
-            # for item in initial_rules:
+            # for index, item in enumerate(initial_rules_2):
+            for item in initial_rules:
                 #[['skills', 'with purpose&no condition'], ['completely unacceptable'], [1.59, 0.65]]
                 # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
                 # e.g.: item[1] = ['Acceptable']
@@ -837,7 +849,9 @@ if __name__ == "__main__":
                                 for key3, value3 in value2.items():
                                     knowledge_base[datatype]['notified'].append(list(key3))
 
+            import pdb; pdb.set_trace()
             norm_base = norm_base_update(norm_base)   #to eliminate all the possible duplicates
+
 
 
          
