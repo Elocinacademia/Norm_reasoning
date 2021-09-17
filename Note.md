@@ -67,3 +67,7 @@
 	*  `test_sort.py` 用来练习***sort***函数
 	*  `test_mining.py` 用来测试***association rule mining***是否work
 	*  `test_similarity.py` 实现***similarity calculation***的几个方法
+
+
+
+Asked Xavier about the similarity calculation method
