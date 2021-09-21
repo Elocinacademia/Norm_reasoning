@@ -32,6 +32,12 @@ if __name__ == "__main__":
     df = pd.read_csv('./data/sub_data/banking_test.csv', header=None, error_bad_lines=False)
     df.head()
     import pdb; pdb.set_trace()
+    col_names = ['Annual Income (k$)', 'Age', 'Spending Score (1-100)']
+    features = df[col_names]
+    scaler = StandardScaler().fit(features.values)
+    features = scaler.transform(features.values)
+    scaled_features = pd.DataFrame(features, columns = col_names)
+    scaled_features.head()
 
 
 
