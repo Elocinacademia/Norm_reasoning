@@ -71,3 +71,9 @@
 
 
 Asked Xavier about the similarity calculation method
+
+
+22/09/2021
+
+1. Users are clustered and the model is trained based on the results of the user clustering. When data related to a user is inserted, it is first determined which cluster the user belongs to and then the corresponding model is used to make the decision.
+2. Conduct the experiments without taking out the datatype. To have an accuracy result of general learning from users. Then changes the details to see how the accuracy are changed. 
