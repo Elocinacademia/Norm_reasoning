@@ -38,9 +38,41 @@ if __name__ == "__main__":
         reader = csv.reader(f)
         all_data = []
         for rows in reader:
-            import pdb; pdb.set_trace()
-            for index , item in enumerate(rows):
-                rows[index] = str_to_list(item)
-            all_data.append(rows)
+            for item in rows:
+                if item == '':
+                    item = 0
+                elif item in ['Completely Unacceptable', 'Completely unacceptable']:
+                    item = 1
+                elif item in ['Somewhat Unacceptable', 'Somewhat unacceptable']:
+                    item = 2
+                elif item in ['Neutral']:
+                    item = 3
+                elif item in ['Somewhat Acceptable', 'Somewhat acceptable']:
+                    item = 4
+                elif item in ['Completely Acceptable', 'Completely acceptable', 'Completely Acceptable ']:
+                    item = 5
+                else:
+                    print(item, type(item))
         
+        file = 'numerical_raw.csv'
+        with open(file, 'w') as f1:
+            writer = csv.writer(f1)
+            for rows in reader:
+                writer.writerow(rows)
+
+
+        import pdb; pdb.set_trace()
+            # for index , item in enumerate(rows):
+            #     rows[index] = str_to_list(item)
+            # all_data.append(rows)
+        
+
+
+
+
+
+
+
+
+
 
