@@ -30,40 +30,17 @@ What criteria should we use to cluster the users?
 
 if __name__ == "__main__":
     #Acceptability Scores
-    df = pd.read_csv('./data/sub_data/banking_test.csv', header=None, error_bad_lines=False)
-    df.head()
-    import pdb; pdb.set_trace()
-    col_names = ['Annual Income (k$)', 'Age', 'Spending Score (1-100)']
-    features = df[col_names]
-    scaler = StandardScaler().fit(features.values)
-    features = scaler.transform(features.values)
-    scaled_features = pd.DataFrame(features, columns = col_names)
-    scaled_features.head()
-
-    with open() as f:
-        gender = df['Gender']
-        newdf = scaled_features.join(gender)
-
-        newdf = pd.get_dummies(newdf, prefix=None, prefix_sep='_', dummy_na=False, columns=None, sparse=False, drop_first=False, dtype=None)
-
-        newdf = newdf.drop(['Gender_Male'],axis=1)
-
-        newdf.head()
-
-        SSE = []
-
-        for cluster in range(1,10):
-            kmeans = KMeans(n_jobs = -1, n_clusters = cluster, init='k-means++')
-            kmeans.fit(newdf)
-            SSE.append(kmeans.inertia_)
-
-        # converting the results into a dataframe and plotting them
-
-            frame = pd.DataFrame({'Cluster':range(1,10), 'SSE':SSE})
-            plt.figure(figsize=(12,6))
-            plt.plot(frame['Cluster'], frame['SSE'], marker='o')
-            plt.xlabel('Number of clusters')
-            plt.ylabel('Inertia')
-
-
+    # df = pd.read_csv('./data/sub_data/banking_test.csv', header=None, error_bad_lines=False)
+    # df.head()
+    
+    filename = 'raw_data.csv'
+    with open(filename) as f:
+        reader = csv.reader(f)
+        all_data = []
+        for rows in reader:
+            import pdb; pdb.set_trace()
+            for index , item in enumerate(rows):
+                rows[index] = str_to_list(item)
+            all_data.append(rows)
+        
 
