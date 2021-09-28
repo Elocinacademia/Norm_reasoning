@@ -34,15 +34,17 @@ if __name__ == "__main__":
     # df.head()
     
     filename = 'raw_data.csv'
+    all_data = []
     with open(filename) as f:
-        reader = csv.reader(f)
-        all_data = []
+        reader = csv.reader(f)      
         for rows in reader:
+            row_store = []
             for item in rows:
                 if item == '':
                     item = 0
                 elif item in ['Completely Unacceptable', 'Completely unacceptable']:
                     item = 1
+                    # import pdb; pdb.set_trace()  
                 elif item in ['Somewhat Unacceptable', 'Somewhat unacceptable']:
                     item = 2
                 elif item in ['Neutral']:
@@ -51,21 +53,23 @@ if __name__ == "__main__":
                     item = 4
                 elif item in ['Completely Acceptable', 'Completely acceptable', 'Completely Acceptable ']:
                     item = 5
-                else:
-                    print(item, type(item))
-        
-        file = 'numerical_raw.csv'
-        with open(file, 'w') as f1:
-            writer = csv.writer(f1)
-            for rows in reader:
-                writer.writerow(rows)
+                row_store.append(item)
+            all_data.append(row_store)
+    
+
+    # import pdb; pdb.set_trace()      
+    file = 'numerical_raw.csv'
+    with open(file, 'w') as f1:
+        writer = csv.writer(f1)
+        for rows in all_data:
+            writer.writerow(rows)
 
 
-        import pdb; pdb.set_trace()
-            # for index , item in enumerate(rows):
-            #     rows[index] = str_to_list(item)
-            # all_data.append(rows)
-        
+    import pdb; pdb.set_trace()
+        # for index , item in enumerate(rows):
+        #     rows[index] = str_to_list(item)
+        # all_data.append(rows)
+    
 
 
 
