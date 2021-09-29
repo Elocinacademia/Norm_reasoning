@@ -1,8 +1,10 @@
 # Cluster Analysis 
 
 ### Sources:
-1. [Zhihu](https://www.zhihu.com/question/19982667)
-2. 
+1. [知乎 -- 用户聚类分析](https://www.zhihu.com/question/19982667)
+2. [高维数据可视化](https://zhuanlan.zhihu.com/p/57503336)
+3. [Stackoverflow](https://stackoverflow.com/questions/56355551/best-clustering-algorithm-for-high-dimensional-vectors)
+4. [降维方法](https://bbs.huaweicloud.com/blogs/detail/178746)
 
 ## Hypothesis:
 1. 假设数据之间存在相似性，且是有价值的
