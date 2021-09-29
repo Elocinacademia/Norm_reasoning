@@ -75,6 +75,22 @@ if __name__ == "__main__":
     #     for rows in all_data:
     #         writer.writerow(rows)
 
+    
+    with open('numerical_raw.csv') as fout:
+        r = csv.reader(fout)
+        l = list(r)
+        data = []
+        for index, item in enumerate(l):
+            if index > 2:
+                item = list(map(int, item))
+                data.append(item)
+          
+        k = np.array(data)
+        print(k.shape[0]-1)
+        import pdb; pdb.set_trace()      
+        
+        
+
 
 
     
@@ -82,7 +98,7 @@ if __name__ == "__main__":
 
 
 
-    import pdb; pdb.set_trace()
+    
         # for index , item in enumerate(rows):
         #     rows[index] = str_to_list(item)
         # all_data.append(rows)
