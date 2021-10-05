@@ -138,6 +138,26 @@ sentence_embeddings = model.encode(sentences)
 #print('Sample BERT embedding vector - note includes negative values', sentence_embeddings[0])
 
 
+'''
+Step 3:
+Then we will define a test query and encode it as well:
+
+'''
+
+query = "I had pizza and pasta"
+query_vec = model.encode([query])[0]
+
+'''
+Step 4:
+We will then compute the cosine similarity using scipy. 
+We will retrieve the similarity values between the sentences and our test query:
+'''
+
+for sent in sentences:
+  sim = cosine(query_vec, model.encode([sent])[0])
+  print("Sentence = ", sent, "; similarity = ", sim)
+
+
 import pdb; pdb.set_trace()
 
 
