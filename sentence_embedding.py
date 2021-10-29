@@ -158,6 +158,14 @@ for sent in sentences:
   print("Sentence = ", sent, "; similarity = ", sim)
 
 
+
+'''
+Additional comments:
+There you go, we have obtained the similarity between the sentences in our text and our test sentence. 
+A crucial point to note is that SentenceBERT is pretty slow if you want to train it from scratch.
+'''
+
+
 import pdb; pdb.set_trace()
 
 
