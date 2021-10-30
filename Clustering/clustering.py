@@ -8,7 +8,11 @@ from sklearn import cluster, preprocessing, metrics
 from scipy import ndimage
 from scipy.sparse.linalg import eigs
 import matplotlib.pyplot as plt
+import random
+from random import choice
 
+
+random.seed(2)
 
 # create affinity matrix
 def compute_affinity_matrix(embeddings, dis_type='cos'):
@@ -44,7 +48,15 @@ def compute_num_clusters(eigenvalues, min_cluster_num = 2, sort = True):
 
 numbers = []
 print('Loading data...')
-with open('num_file.csv') as fin:
+
+
+
+
+
+
+
+
+with open('./data/new_data/training_set.csv') as fin:
     for i, line in enumerate(fin):
         if i == 0:
             headers = [item for item in line.split(',')]
@@ -63,8 +75,9 @@ print(data)
 # Start Clustering
 #####################################################################
 print('Perform spectral clustering..')
-min_cluster_num, max_cluster_num = 2, 9
-affinity_matrix = compute_affinity_matrix(data, dis_type='cos')
+min_cluster_num, max_cluster_num = 2, 7
+# affinity_matrix = compute_affinity_matrix(data, dis_type='cos')
+affinity_matrix = compute_affinity_matrix(data, dis_type='euc')
 eigenvalues = eigs(affinity_matrix, k = max_cluster_num + 1, return_eigenvectors = False)
 num_clusters = compute_num_clusters(np.real(eigenvalues), min_cluster_num = min_cluster_num)
 print("Eigenvalues: ")
@@ -76,6 +89,10 @@ spectral = cluster.SpectralClustering(n_clusters = num_clusters, eigen_solver = 
                                       n_init = 10, affinity = 'precomputed', eigen_tol = 5.0)
 # Train it on the processed affinity matrix:
 spectral.fit(affinity_matrix)
+
+
+# import pdb; pdb.set_trace()
+
 
 cluster_labels = spectral.labels_.astype(np.int)
 
@@ -92,7 +109,8 @@ cluster_labels = spectral.labels_.astype(np.int)
 #####################################################################
 # Data Write Out
 #####################################################################
-with open('num_file_out.csv', 'w') as fout:
+with open('./data/new_data/num_file_out.csv', 'w') as fout:
+    headers.insert(0,'label')
     fout.write(','.join(headers) + '\n')
     for i, nums in enumerate(numbers):
         fout.write('{},'.format(cluster_labels[i])+','.join([str(n) for n in nums]) + '\n')
