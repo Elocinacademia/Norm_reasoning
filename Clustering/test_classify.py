@@ -18,7 +18,7 @@ import csv
 import pandas as pd
 import numpy as np
 
-f = open('./data/new_data/num_file_out.csv')
+f = open('./data/new_data/num_file_labelled.csv')
 reader = csv.reader(f)
 header = next(reader)
 true_header = header[1:]
@@ -125,9 +125,9 @@ type2.insert(0,true_header)
 type3.insert(0,true_header)
 
 
-file1 = './data/new_data/model1_train.csv'
-file2 = './data/new_data/model2_train.csv'
-file3 = './data/new_data/model3_train.csv'
+file1 = './data/new_data/backup/model1_train.csv'
+file2 = './data/new_data/backup/model2_train.csv'
+file3 = './data/new_data/backup/model3_train.csv'
 with open(file1,'w') as fout_1:
         writer = csv.writer(fout_1)
         for rows in type1:
@@ -154,9 +154,9 @@ test_2.insert(0,true_header)
 test_3.insert(0,true_header)
 
 
-ff1 = './data/new_data/model1_test.csv'
-ff2 = './data/new_data/model2_test.csv'
-ff3 = './data/new_data/model3_test.csv'
+ff1 = './data/new_data/backup/model1_test.csv'
+ff2 = './data/new_data/backup/model2_test.csv'
+ff3 = './data/new_data/backup/model3_test.csv'
 
 
 with open(ff1,'w') as fout_11:

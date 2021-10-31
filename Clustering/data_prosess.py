@@ -108,9 +108,10 @@ under the following conditions:
 
 
 
-print('Load test set data ...')
+print('Load data file ...')
+name = './data/new_data/backup/model3_test.csv'
 
-f = open('./data/new_data/model1_train.csv')
+f = open(name)
 reader = csv.reader(f)
 header_row = next(reader)
 
@@ -283,30 +284,70 @@ for number,row in enumerate(data):
 
 # import pdb; pdb.set_trace()
 
+
+
+
+
+
+
+
+
 ##################################################
 #Transfer the test_data to plain text csv file
 ##################################################
 
+def process_test_data():
 
-new_file = './data/new_data/try.csv'
-with open(new_file,"w") as csv_file:
-    writer=csv.writer(csv_file)
-    for key,value in info_flow_dic.items():
-        # import pdb; pdb.set_trace() 
-        writer.writerow(value)
-
-import pdb; pdb.set_trace()
+    new_file = './data/new_data/model3/model3_test.csv'
+    with open(new_file,"w") as csv_file:
+        writer=csv.writer(csv_file)
+        for key,value in info_flow_dic.items():
+            writer.writerow(value)
 
 
 
 
+##################################################
+#Transfer the training_data to plain text csv file
+##################################################
+
+
+def process_train_data():
+
+    column_data = []
+    column_re = []
+    column_condition = []
+    column_ac = []
+
+
+    for key, value in info_flow_dic.items():
+        for key1, value1 in enumerate(value):
+            column_data.append(value1[0])
+            column_re.append(value1[1])
+            column_condition.append(value1[2])
+            column_ac.append(value1[4])
+
+    print(len(column_data), len(column_re), len(column_condition), len(column_ac))
+
+    zipped = zip(column_data, column_re, column_condition, column_ac) 
+    # for item in zipped:
+    #     print(item)
+    #     import pdb; pdb.set_trace()
+
+
+    new_file = './data/new_data/model3/model3_train.csv'
+    with open(new_file,"w") as csv_file:
+        writer=csv.writer(csv_file)
+        for row in zipped:
+            writer.writerow(row)
 
 
 
-            
 
-
-
+if 'train' in name:
+    process_train_data()
+elif 'test' in name:
+    process_test_data()
 
 
 

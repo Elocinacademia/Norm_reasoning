@@ -84,3 +84,18 @@ Sentence level embeddings:
 [参考网站Top 4 Sentence Embedding Techniques using Python!](https://www.analyticsvidhya.com/blog/2020/08/top-4-sentence-embedding-techniques-using-python/)
 
 **Sentence embedding** techniques represent entire sentences and their semantic information as vectors. This helps the machine in understanding the context, intention, and other nuances in the entire text.
+
+
+31/10/2021
+
+1. Cluster1:
+	* Training: 621   
+	* Test: 124
+	
+2. Cluster2:
+	* Training: 301 
+	* Test: 139
+
+3. Cluster2:
+	* Training: 467
+	* Test: 84
