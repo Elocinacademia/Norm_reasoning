@@ -4,6 +4,13 @@
 
 ###################################################################
 # Classify the test data
+#test_1: 124
+# test_2: 139
+# test_3: 84
+
+# train_1: 621
+# train_2: 301
+# train_3: 467
 ###################################################################
 
 
@@ -14,8 +21,9 @@ import numpy as np
 f = open('./data/new_data/num_file_out.csv')
 reader = csv.reader(f)
 header = next(reader)
-
+true_header = header[1:]
 print('Loading data ... ')
+
 
 
 type1 = []
@@ -74,9 +82,8 @@ test_1 = []
 test_2 = []
 test_3 = []
 
-test_1.append(header)
-test_2.append(header)
-test_3.append(header)
+
+
 for index, item in enumerate(reader):
     dist = []
     if index > 0:
@@ -89,7 +96,7 @@ for index, item in enumerate(reader):
         dist.append(dist_1)
         dist.append(dist_2)
         dist.append(dist_3)
-        print(dist)
+        # print(dist)
         closest_ = dist.index(min(dist)) + 1
         if closest_ == 1:
             test_1.append(item)
@@ -110,13 +117,13 @@ print('test_3:', len(test_3))
 
 
 
-
 ###################################
 #Save training data without lables
 ###################################
-type1.insert(0,header[1:])
-type2.insert(0,header[1:])
-type3.insert(0,header[1:])
+type1.insert(0,true_header)
+type2.insert(0,true_header)
+type3.insert(0,true_header)
+
 
 file1 = './data/new_data/model1_train.csv'
 file2 = './data/new_data/model2_train.csv'
@@ -124,17 +131,17 @@ file3 = './data/new_data/model3_train.csv'
 with open(file1,'w') as fout_1:
         writer = csv.writer(fout_1)
         for rows in type1:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
 with open(file2,'w') as fout_2:
         writer = csv.writer(fout_2)
         for rows in type2:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
 with open(file3,'w') as fout_3:
         writer = csv.writer(fout_3)
         for rows in type3:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
 
 ###################################
@@ -142,9 +149,9 @@ with open(file3,'w') as fout_3:
 ###################################
 
 
-test_1.insert(0,header[1:])
-test_2.insert(0,header[1:])
-test_3.insert(0,header[1:])
+test_1.insert(0,true_header)
+test_2.insert(0,true_header)
+test_3.insert(0,true_header)
 
 
 ff1 = './data/new_data/model1_test.csv'
@@ -155,17 +162,17 @@ ff3 = './data/new_data/model3_test.csv'
 with open(ff1,'w') as fout_11:
         writer = csv.writer(fout_11)
         for rows in test_1:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
 with open(ff2,'w') as fout_22:
         writer = csv.writer(fout_22)
         for rows in test_2:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
 with open(ff3,'w') as fout_33:
         writer = csv.writer(fout_33)
         for rows in test_3:
-            writer.writerow(rows[1:])
+            writer.writerow(rows)
 
-import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 

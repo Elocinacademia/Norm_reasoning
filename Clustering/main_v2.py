@@ -758,6 +758,12 @@ def random_baseline():
 
 '''
 Below are the main body of the whole System/Agent
+    X steps are included:
+        1. Seperate the data to Training Set and Test Set
+        2. Cluster the users
+        3. Mine the rules
+        4. ...
+
 '''
 
 
