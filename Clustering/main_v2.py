@@ -172,12 +172,16 @@ def data_generator(filename):
     
     return data_gen
 
-def rule_mining(min_support, min_confidence, target_datatype):
+def rule_mining(min_support, min_confidence, model_type):
     '''
     Together with data_generator, used to mind the association rules
     Return a set of rules that agreed by the majority of people, together with decisions made on them and [lift+confidence] value
     '''
-    file1 = './data/sub_data/' + target_datatype + '_train.csv'
+
+    i = str(model_type)
+    # file1 = './data/sub_data/' + target_datatype + '_train.csv'
+    file1 = './data/new_data/model' + i + '/model' + i + '_train.csv'
+    # import pdb; pdb.set_trace()
     transactions = data_generator(file1)
     itemsets, rules = apriori(transactions, min_support, min_confidence)
 
@@ -746,6 +750,7 @@ def load_test(datatype):
         return all_data
 
 
+
 def random_baseline():
     l = ['F', 'P']
     return choice(l)
@@ -775,13 +780,17 @@ if __name__ == "__main__":
     # all_data = data_input('./data/new_file.csv')
     accuracy_summary = []
     random_accu_summary = []
-    for index, item in enumerate(data_use_to_create_base['data'][:-1]):
-        if item not in ['smart camera', 'to do list', 'sleeping hours']:
-            # (training_set, test_set) = sample_split(all_data, item)
-            # # all_data = data_trans_to_plaintext('./data/new_file.csv')   #all the data in plain text format
-            # x = to_plaintext(training_set)
-            test_set = load_test(item)
-            initial_rules_1 = rule_mining(0.015, 0.56, item)
+    for i in range(1,4):
+        data_file = './data/new_data/model' + str(i) + '/model' + str(i) + '_test.csv'
+        with open(data_file) as f:
+            reader = csv.reader(f)
+            test_set = []
+            for rows in reader:
+                for index , item in enumerate(rows):
+                    rows[index] = str_to_list(item)
+                test_set.append(rows)
+
+            initial_rules_1 = rule_mining(0.015, 0.5, i)
             initial_rules_2 = []
             exception = ['with purpose&no condition', 'no purpose&no condition', 'with purpose&condition1','with purpose&condition2','with purpose&condition3','with purpose&condition5','with purpose&condition4']
             for k, v in enumerate(initial_rules_1):
@@ -789,6 +798,26 @@ if __name__ == "__main__":
                     initial_rules_2.append(v)
                 elif len(v[0]) > 1:
                     initial_rules_2.append(v)
+
+
+
+
+
+
+    # for index, item in enumerate(data_use_to_create_base['data'][:-1]):
+    #     if item not in ['smart camera', 'to do list', 'sleeping hours']:
+    #         # (training_set, test_set) = sample_split(all_data, item)
+    #         # # all_data = data_trans_to_plaintext('./data/new_file.csv')   #all the data in plain text format
+    #         # x = to_plaintext(training_set)
+    #         test_set = load_test(item)
+    #         initial_rules_1 = rule_mining(0.015, 0.56, item)
+    #         initial_rules_2 = []
+    #         exception = ['with purpose&no condition', 'no purpose&no condition', 'with purpose&condition1','with purpose&condition2','with purpose&condition3','with purpose&condition5','with purpose&condition4']
+    #         for k, v in enumerate(initial_rules_1):
+    #             if len(v[0]) == 1 and v[0][0] not in exception:
+    #                 initial_rules_2.append(v)
+    #             elif len(v[0]) > 1:
+    #                 initial_rules_2.append(v)
 
            
             '''
@@ -812,7 +841,7 @@ if __name__ == "__main__":
             # matching_norms = copy.deepcopy(norm_base)
             # active_norms = copy.deepcopy(norm_base)
 
-            
+
             norm_collection = []
             action_collection = []
             # 'initial_rules' is used for preliminary testing
@@ -865,7 +894,7 @@ if __name__ == "__main__":
                 and will be put into the norm base
             '''
             defaults = copy.deepcopy(norm_base)
-           
+            # import pdb;pdb.set_trace()
 
             '''
             ***************Feature1: Manage knowledge base**********************
