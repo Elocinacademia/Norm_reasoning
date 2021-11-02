@@ -99,3 +99,9 @@ Sentence level embeddings:
 3. Cluster2:
 	* Training: 467
 	* Test: 84
+
+	
+02/11/2021
+1. rule_mining(0.01, 0.5, i)
+2. rule_mining(0.015, 0.6, i)  #i=2时的参数很好 比较稳定
+3. rule_mining(0.01, 0.5, i)
