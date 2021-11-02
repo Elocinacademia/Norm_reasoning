@@ -105,3 +105,8 @@ Sentence level embeddings:
 1. rule_mining(0.01, 0.5, i)
 2. rule_mining(0.015, 0.6, i)  #i=2时的参数很好 比较稳定
 3. rule_mining(0.01, 0.5, i)
+
+accuracy for each dataset: 0.5892029245571914
+accuracy for each dataset: 0.6944144675272277
+accuracy for each dataset: 0.5461312015056429
+overall 0.6099161978633539
