@@ -66,6 +66,7 @@ trans_recipient = {'your partner': 'partner',
 'your parents': 'parents',
 'your housemates': 'housemates',
 'your children': 'children',
+'your friends': 'close friends'
 }
 
 
@@ -96,25 +97,28 @@ def action_format(rule_left_list):
     Used to form a relevant norm
     '''
     # rule_left_list[i] = ['call assistant', 'prime user']
+
     #action[i] should be = ['name', 'actor = 'SPA'', 'target', 'attribute', 'data', 'subject', 'purpose']
     action = ['send', 'spa', '_', '_', '_', 'primary_user', '_']
     condition_type = '_'
 
-    
-
     for item in rule_left_list:
-        if item in trans_recipient.keys():
-            item = trans_recipient[item]
-        if item in action_dictionary['target']:
-            action[2] = item
-        if item in action_dictionary['data']:
-            if item in data_clean.keys():
-                action[4] = data_clean[item]
+        window = item
+        
+        if window in trans_recipient.keys():
+            window = trans_recipient[window]
+            if window in action_dictionary['target']:
+                action[2] = window
+        elif window in action_dictionary['target']:
+            action[2] = window
+        elif window in action_dictionary['data']:
+            if window in data_clean.keys():
+                action[4] = data_clean[window]
             else:
-                action[4] = item
+                action[4] = window
             my_key = get_key_from_dictionary(attributes, action[4])
             action[3] = my_key[0]
-        if item in action_dictionary['principle']:
+        elif window in action_dictionary['principle']:
             '''
             condition1: notified(Actor,Subject,Action)
             condition2: anonimised(Data)
@@ -122,27 +126,77 @@ def action_format(rule_left_list):
             condition4: after purpose detele〈O,achieved(Purpose),delete(Actor,Data),〉
             condition5: can review(Actor,Data)
             '''
-            if item == 'no purpose&no condition':
+            if window == 'no purpose&no condition':
                 action[6] = '_'
                 condition_type = '_'
-            elif item == 'with purpose&no condition':
+            elif window == 'with purpose&no condition':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type = '_'
-            elif item == 'with purpose&condition1':
+            elif window == 'with purpose&condition1':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type = 'notified'
-            elif item == 'with purpose&condition2':
+            elif window == 'with purpose&condition2':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type = 'anonimised'
-            elif item == 'with purpose&condition3':
+            elif window == 'with purpose&condition3':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type = 'confidential'
-            elif item == 'with purpose&condition4':
+            elif window == 'with purpose&condition4':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type ='store'
-            elif item == 'with purpose&condition5':
+            elif window == 'with purpose&condition5':
                 action[6] = 'with the purpose of knowing the data'
                 condition_type = 'review'
+        else:
+            print(item)
+    
+
+
+
+    
+
+    # for item in rule_left_list:
+    #     import pdb; pdb.set_trace()
+    #     if item in trans_recipient.keys():
+    #         item = trans_recipient[item]
+    #     if item in action_dictionary['target']:
+    #         action[2] = item
+    #     if item in action_dictionary['data']:
+    #         if item in data_clean.keys():
+    #             action[4] = data_clean[item]
+    #         else:
+    #             action[4] = item
+    #         my_key = get_key_from_dictionary(attributes, action[4])
+    #         action[3] = my_key[0]
+    #     if item in action_dictionary['principle']:
+    #         '''
+    #         condition1: notified(Actor,Subject,Action)
+    #         condition2: anonimised(Data)
+    #         condition3: confidential〈F,,send(Actor,Target,Attribute,Data,Subject,Purpose)
+    #         condition4: after purpose detele〈O,achieved(Purpose),delete(Actor,Data),〉
+    #         condition5: can review(Actor,Data)
+    #         '''
+    #         if item == 'no purpose&no condition':
+    #             action[6] = '_'
+    #             condition_type = '_'
+    #         elif item == 'with purpose&no condition':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type = '_'
+    #         elif item == 'with purpose&condition1':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type = 'notified'
+    #         elif item == 'with purpose&condition2':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type = 'anonimised'
+    #         elif item == 'with purpose&condition3':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type = 'confidential'
+    #         elif item == 'with purpose&condition4':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type ='store'
+    #         elif item == 'with purpose&condition5':
+    #             action[6] = 'with the purpose of knowing the data'
+    #             condition_type = 'review'
 
     return action, condition_type
     
@@ -492,6 +546,7 @@ def compare_confidence(actions, matching_norm_base):
         tempo = []
         real_act = act[:-1]
         tempo.append(real_act)
+        # import pdb; pdb.set_trace()
         for key, value in matching_norm_base[tuple(real_act)].items():
             tempo.append(key)
             tempo.append(value[0])
@@ -570,6 +625,7 @@ def action_determine(action):
     'weather': {'anonimised': [], 'notified': []}}
 
     '''
+
     if key_word_data != '_':
         for item in knowledge_base[key_word_data]['anonimised']:  #[shoud be data, subject]
             if action[5] == item:
@@ -631,7 +687,7 @@ def action_determine(action):
     #                 active_norm_base[keys] = values
     
 
-    
+    matching_norm_base = {}
     #判断active_norm_base是否为空
     result = []
     if active_norm_base != {}:
@@ -639,21 +695,29 @@ def action_determine(action):
         for item in active_norm_base.keys():
             l = list(item)
             if l == action:
-                result.append(list(active_norm_base[item].keys())[0])
+                y = list(active_norm_base[item].keys())
+                result.append(y[0])
                 #active norm base中有相同的action 直接返回result
             else:
                 possible_actions.append(l)
         if result != empty:
             return result[0]
         else:
+            # import pdb; pdb.set_trace()
+            #select the most similar norm in the active norm base to make the decision
             (most_similar_action, num) = find_most_similar_action(possible_actions, action)
             if num == 1:
                 most_similar_one = most_similar_action[0]
-                x = tuple(most_similar_one)
-                result.append(list(active_norm_base[x].keys())[0])
+                x = tuple(most_similar_one[:-1])
+                # import pdb; pdb.set_trace()
+                y = list(active_norm_base[x].keys())
+                result.append(y[0])
+
             else:
-                most_similar_one = compare_confidence(most_similar_action, matching_norm_base)
-                result.append(list(matching_norm_base[most_similar_one].keys())[0])
+                # import pdb; pdb.set_trace()
+                #most_similar_action is a list, which contains more than one similar actions
+                most_similar_one = compare_confidence(most_similar_action, active_norm_base)
+                result.append(list(active_norm_base[most_similar_one].keys())[0])
  
             return result[0]
             #找similar的norm
@@ -661,25 +725,31 @@ def action_determine(action):
         #active norm base为空
         #先找general的norm
         #再找剩下norm中最相似的
-        matching_norm_base = {}
+        # matching_norm_base = {}
+
         possible_actions_1 = []
         for key, value in norm_base['_'].items():
             for key1, value1 in value.items():
                 for key2, value2 in value1.items():
                         matching_norm_base[key2] = value2
                         possible_actions_1.append(list(key2))
-        
+             
         # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
         (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
+        
         if num == 1:
             most_similar_one = most_similar_action[0][:-1]
             x = tuple(most_similar_one)
             # import pdb; pdb.set_trace()
-            result.append(list(matching_norm_base[x].keys())[0])
+            l1 = list(matching_norm_base[x].keys())
+            result.append(l1[0])
         else:
             most_similar_one = compare_confidence(most_similar_action, matching_norm_base)
-            result.append(list(matching_norm_base[most_similar_one].keys())[0])
-        #import pdb; pdb.set_trace()
+            x = tuple(most_similar_one)
+            # result.append(list(matching_norm_base[most_similar_one].keys())[0])
+            l2 = list(matching_norm_base[x].keys())
+            result.append(l2[0])
+        # import pdb; pdb.set_trace()
         return result[0]
 
 
@@ -790,7 +860,12 @@ if __name__ == "__main__":
                     rows[index] = str_to_list(item)
                 test_set.append(rows)
 
-            initial_rules_1 = rule_mining(0.015, 0.5, i)
+            if i == 1:
+                initial_rules_1 = rule_mining(0.01, 0.5, i)
+            elif i == 2:
+                initial_rules_1 = rule_mining(0.015, 0.6, i)  #i=2时的参数很好 比较稳定
+            elif i == 3:
+                initial_rules_1 = rule_mining(0.01, 0.5, i)
             initial_rules_2 = []
             exception = ['with purpose&no condition', 'no purpose&no condition', 'with purpose&condition1','with purpose&condition2','with purpose&condition3','with purpose&condition5','with purpose&condition4']
             for k, v in enumerate(initial_rules_1):
@@ -799,7 +874,7 @@ if __name__ == "__main__":
                 elif len(v[0]) > 1:
                     initial_rules_2.append(v)
 
-
+            
 
 
 
@@ -851,6 +926,7 @@ if __name__ == "__main__":
                 # e.g.: item[0] = ['call assistant', 'prime user', 'with the purpose of knowing the data']
                 # e.g.: item[1] = ['Acceptable']
                 # e.g.: item[2] = [1.2, 1.5]  lift & confidence
+
                 (action, condition_type) = action_format(item[0])
                 #action = ['send', 'spa', 'neighbours', 'ride_service', 'location', 'primary_user', 'with the purpose of knowing the data']
                 norm = norm_format(condition_type, item[1][0], action, item[2])
@@ -859,7 +935,12 @@ if __name__ == "__main__":
                 norm_collection.append(norm)
                 action_collection.append(action)
                 # import pdb;pdb.set_trace()
-                
+                # if index < 15:
+                #     print(item)
+                #     print(action)
+                #     print(norm)
+                #     print('----------------------')
+                    
 
 
                 if norm[1] == '_': #precondition
@@ -888,6 +969,8 @@ if __name__ == "__main__":
                             norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]].sort(key=takeSecond, reverse=True)
                             norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]] = norm_base[action[4]][norm[1]][action[5]][tuple(action)][norm[0]][0]
             
+
+
             
             '''
                 Defaults is the rules mind using the training set
@@ -924,8 +1007,7 @@ if __name__ == "__main__":
             norm_base = norm_base_update(norm_base)   #to eliminate all the possible duplicates
 
 
-
-         
+            
             
             final_result = []
             for item in test_set:
@@ -960,36 +1042,7 @@ if __name__ == "__main__":
 
 
 
-#for tomorrow to check
 
-
-
-
-    # Knowledge base : add and remove
-
-    # Knowledge base: When new actions are monitored
-    # new actions look like: (email, parents, no purpose&no condition, prime user,Acceptable)
-
-    # new_action_list = []
-
-    # for i in test_set:
-    #     #item = ['healthcare', 'advertising agencies', 'with purpose&no condition', 'prime user', 'Acceptable']
-    #     #i[0] = data
-    #     #i[3] = subject
-    #     n = [i[0], i[1], i[2], i[3]]
-    #     #i[4] = acceptable
-    #     (new_act_monitored, new_act_condition) = action_format(n)
-    #     new_norm_from_new_act = norm_format(new_act_condition, i[4], new_act_monitored, [])
-    #     #new_norm_from_new_act is used to compare user perceptions(new_norm_from_new_act[0]) with NSA results
-    #     new_action_list.append(new_act_monitored)
-    #     import pdb;pdb.set_trace()
-
-
-    # for i in new_action_list:
-    #     # import pdb;pdb.set_trace()
-    #     result = action_determine(norm_base, knowledge_base, i)
-
-        
 
 
 
