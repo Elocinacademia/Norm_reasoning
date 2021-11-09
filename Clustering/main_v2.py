@@ -510,6 +510,122 @@ def find_most_similar_action(action_list, action1):
     return most_similar, len(most_similar)
 
 
+def element_similarity_2(elem1, elem2):
+    # elem1 = 'healthcare_data'
+    # elem2 = '_'
+    count_list = []
+    if elem1.strip().lstrip() == '_' or elem2.strip().lstrip() == '_':
+        count = 1
+    else:
+        elem1 = '_'.join(elem1.split())
+        elem2 = '_'.join(elem2.split())
+        elem1 = elem1.split('_')
+        elem2 = elem2.split('_')
+        # example: elem2 = ['sugar', 'reading']
+        # example2: elem1 = 'I want to know some knoweldge about my parent health'
+        import pdb; pdb.set_trace()
+
+        elem1_emb = np.array([0] * len(embeddings_index['the']), dtype='float32')
+        elem2_emb = np.array([0] * len(embeddings_index['the']), dtype='float32')
+        # Approach1: Addition
+        for order, x in enumerate(elem1):
+            elem1_emb += embeddings_index[x]
+        for order, x in enumerate(elem2):
+            elem2_emb += embeddings_index[x]
+        count = cosine_similarity(elem1_emb, elem2_emb)
+        #count = euclidean_distance(elem1_emb, elem2_emb)
+        #count = manhattan_distance(elem1_emb, elem2_emb)
+        #Change here
+
+
+        # Approach2: Elementwise max
+      
+    return count
+
+
+# embeddings_index = {}
+# f = open('glove.6B.100d.txt')   
+# for line in f:
+#     values = line.split()
+#     word = values[0]
+#     coefs = np.asarray(values[1:], dtype='float32')
+#     embeddings_index[word] = coefs
+# f.close()
+
+
+
+def form_sentence(action):
+    sentence = ''
+    if action[2] == '_' and action[6] == '_':
+        #no recipient no purpose: ('send', 'spa', '_', 'voice_recordings', 'voice recording', 'primary_user', '_')
+        sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' without stating purpose'
+    elif action[2] == '_' and action[6]!= '_':
+        #no recipient: ('send', 'spa', '_', 'voice_recordings', 'voice recording', 'primary_user', '_')
+        sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' ' + action[6]
+    elif action[2] != '_' and action[4] == '_':
+        if action[6] == '_':
+            sentence = 'The assistant is sending the information of ' + action[5] + ' to ' + action[2] + ' without stating purpose'
+        else:
+            sentence = 'The assistant is sending the information of ' + action[5] + ' to ' + action[2] + ' ' + action[6]
+    else:
+        'The assistant is sending ' + action[4] + ' of ' + action[5] + ' to ' + action[2]+  ' ' + action[6]
+    return sentence
+
+
+
+
+def bert(sentence_collection):
+    import nltk
+    nltk.download('punkt')
+    from nltk.tokenize import word_tokenize
+    import numpy as np
+
+    sentences = ["I ate dinner.", 
+       "We had a three-course meal.", 
+       "Brad came to dinner with us.",
+       "He loves fish tacos.",
+       "In the end, we all felt like we ate too much.",
+       "We all agreed; it was a magnificent evening."]
+
+    # Tokenization of each document
+    tokenized_sent = []
+    for s in sentences:
+        tokenized_sent.append(word_tokenize(s.lower()))
+    print(tokenized_sent)
+
+
+
+    from sentence_transformers import SentenceTransformer
+    sbert_model = SentenceTransformer('bert-base-nli-mean-tokens')
+    
+
+
+
+def find_most_similar_action_3(action_list, action1):
+    '''
+    This function is used to test the sentence embeddings:
+    # Each action forms a reasonable sentence
+    '''
+    sentence_collection = []
+    for items in action_list:
+        sentence_collection.append(form_sentence(items))
+    import pdb; pdb.set_trace()
+    if len(sentence_collection) ==1:
+        return sentence_collection, len(sentence_collection)
+    else:
+        #retrieve BERT
+        import pdb; pdb.set_trace()
+        return 0
+
+        
+
+
+
+
+
+
+
+
 
 
 
@@ -705,7 +821,9 @@ def action_determine(action):
         else:
             # import pdb; pdb.set_trace()
             #select the most similar norm in the active norm base to make the decision
-            (most_similar_action, num) = find_most_similar_action(possible_actions, action)
+            # (most_similar_action, num) = find_most_similar_action(possible_actions, action)
+            # (most_similar_action, num) = find_most_similar_action_2(possible_actions, action)
+            (most_similar_action, num) = find_most_similar_action_3(possible_actions, action)
             if num == 1:
                 most_similar_one = most_similar_action[0]
                 x = tuple(most_similar_one[:-1])
@@ -735,7 +853,8 @@ def action_determine(action):
                         possible_actions_1.append(list(key2))
              
         # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
-        (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
+        # (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
+        (most_similar_action, num) = find_most_similar_action_3(possible_actions_1, action)
         
         if num == 1:
             most_similar_one = most_similar_action[0][:-1]
