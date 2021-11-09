@@ -110,3 +110,9 @@ accuracy for each dataset: 0.5892029245571914
 accuracy for each dataset: 0.6944144675272277
 accuracy for each dataset: 0.5461312015056429
 overall 0.6099161978633539
+
+
+For tomorrow:
+Test sensitivity
+Test sentence embeddings
+Test automatically check 
