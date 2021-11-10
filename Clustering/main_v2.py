@@ -575,28 +575,7 @@ def form_sentence(action):
 
 
 def bert(sentence_collection):
-    import nltk
-    nltk.download('punkt')
-    from nltk.tokenize import word_tokenize
-    import numpy as np
-
-    sentences = ["I ate dinner.", 
-       "We had a three-course meal.", 
-       "Brad came to dinner with us.",
-       "He loves fish tacos.",
-       "In the end, we all felt like we ate too much.",
-       "We all agreed; it was a magnificent evening."]
-
-    # Tokenization of each document
-    tokenized_sent = []
-    for s in sentences:
-        tokenized_sent.append(word_tokenize(s.lower()))
-    print(tokenized_sent)
-
-
-
-    from sentence_transformers import SentenceTransformer
-    sbert_model = SentenceTransformer('bert-base-nli-mean-tokens')
+    pass
     
 
 
@@ -608,10 +587,13 @@ def find_most_similar_action_3(action_list, action1):
     '''
     sentence_collection = []
     for items in action_list:
-        sentence_collection.append(form_sentence(items))
-    import pdb; pdb.set_trace()
-    if len(sentence_collection) ==1:
+        result = []
+        result.append(form_sentence(items))
+        sentence_collection.append(result)
+    # import pdb; pdb.set_trace()
+    if len(sentence_collection) == 1:
         return sentence_collection, len(sentence_collection)
+
     else:
         #retrieve BERT
         import pdb; pdb.set_trace()
@@ -821,9 +803,10 @@ def action_determine(action):
         else:
             # import pdb; pdb.set_trace()
             #select the most similar norm in the active norm base to make the decision
-            # (most_similar_action, num) = find_most_similar_action(possible_actions, action)
+            (most_similar_action, num) = find_most_similar_action(possible_actions, action)
             # (most_similar_action, num) = find_most_similar_action_2(possible_actions, action)
-            (most_similar_action, num) = find_most_similar_action_3(possible_actions, action)
+            # (most_similar_action, num) = find_most_similar_action_3(possible_actions, action)
+            import pdb; pdb.set_trace()
             if num == 1:
                 most_similar_one = most_similar_action[0]
                 x = tuple(most_similar_one[:-1])
@@ -852,9 +835,9 @@ def action_determine(action):
                         matching_norm_base[key2] = value2
                         possible_actions_1.append(list(key2))
              
-        # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
+        (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
         # (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
-        (most_similar_action, num) = find_most_similar_action_3(possible_actions_1, action)
+        # (most_similar_action, num) = find_most_similar_action_3(possible_actions_1, action)
         
         if num == 1:
             most_similar_one = most_similar_action[0][:-1]
