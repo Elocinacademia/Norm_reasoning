@@ -553,29 +553,76 @@ def element_similarity_2(elem1, elem2):
 # f.close()
 
 
+def cosine(u, v):
+    return np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
 
-def form_sentence(action):
-    sentence = ''
-    if action[2] == '_' and action[6] == '_':
+
+def bert(sentences, query):
+
+    from sentence_transformers import SentenceTransformer
+    sbert_model = SentenceTransformer('bert-base-nli-mean-tokens')
+    sentence_embeddings = sbert_model.encode(sentences)
+
+    # print('Sample BERT embedding vector - length', len(sentence_embeddings[0]))
+    # print('Sample BERT embedding vector - note includes negative values', sentence_embeddings[0])
+
+    # query = "  "
+    query_vec = sbert_model.encode([query])[0]
+
+    sim_value = []
+    for sent in sentences:
+        # import pdb; pdb.set_trace()
+        sim = cosine(query_vec, sbert_model.encode([sent])[0])
+        sim_value.append(sim)
+        print("Sentence = ", sent, "; similarity = ", sim)
+    index = sim_value.index(max(sim_value))
+    print(index, sim_value[index])
+    return index, sim_value[index]
+    
+
+
+
+
+
+
+
+def form_sentence(ori_action):
+    # sentence = ''
+    action = copy.deepcopy(ori_action)
+    if '_' in action[2]:
+        action[2] = ' '.join(action[2].split('_'))
+    if '_' in action[4]:
+        action[4] = ' '.join(action[4].split('_'))
+    if '_' in action[5]:
+        action[5] = ' '.join(action[5].split('_'))
+    if '_' in action[6]:
+        action[6] = ' '.join(action[6].split('_'))
+     
+    
+    if action[2] == ' ' and action[6] == ' ':
         #no recipient no purpose: ('send', 'spa', '_', 'voice_recordings', 'voice recording', 'primary_user', '_')
         sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' without stating purpose'
-    elif action[2] == '_' and action[6]!= '_':
+    elif action[2] == ' ' and action[6]!= ' ':
         #no recipient: ('send', 'spa', '_', 'voice_recordings', 'voice recording', 'primary_user', '_')
         sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' ' + action[6]
-    elif action[2] != '_' and action[4] == '_':
-        if action[6] == '_':
+    elif action[2] != ' ' and action[4] == ' ':
+        if action[6] == ' ':
             sentence = 'The assistant is sending the information of ' + action[5] + ' to ' + action[2] + ' without stating purpose'
         else:
             sentence = 'The assistant is sending the information of ' + action[5] + ' to ' + action[2] + ' ' + action[6]
     else:
-        'The assistant is sending ' + action[4] + ' of ' + action[5] + ' to ' + action[2]+  ' ' + action[6]
+        if action[6] == ' ':
+            sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' to ' + action[2]+ ' without stating purpose'
+        else:
+            sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' to ' + action[2]+  ' ' + action[6]
+    
+    
+
     return sentence
 
 
 
 
-def bert(sentence_collection):
-    pass
     
 
 
@@ -585,29 +632,26 @@ def find_most_similar_action_3(action_list, action1):
     This function is used to test the sentence embeddings:
     # Each action forms a reasonable sentence
     '''
-    sentence_collection = []
-    for items in action_list:
-        result = []
-        result.append(form_sentence(items))
-        sentence_collection.append(result)
-    # import pdb; pdb.set_trace()
-    if len(sentence_collection) == 1:
-        return sentence_collection, len(sentence_collection)
-
+    if len(action_list) == 1:
+        action_list[0].append('1')
+        return action_list, len(action_list)
     else:
-        #retrieve BERT
-        import pdb; pdb.set_trace()
-        return 0
+        sentence_collection = []
+        for items in action_list:
+            result = form_sentence(items)
+            sentence_collection.append(result)
+        test_sentence = form_sentence(action1)
+        (index, sim) = bert(sentence_collection,test_sentence) 
+        return_list = []
+        action_list[index].append(sim)
+        return_list.append(action_list[index])
+        # import pdb; pdb.set_trace()
+        return return_list, 1
 
+        '''
+        sentence_collection = ['The assistant is sending call assistant of primary_user to skills without stating purpose', 'The assistant is sending call assistant of primary_user without stating purpose', 'The assistant is sending call assistant of primary_user with the purpose of knowing the data']
+        '''
         
-
-
-
-
-
-
-
-
 
 
 
@@ -803,15 +847,19 @@ def action_determine(action):
         else:
             # import pdb; pdb.set_trace()
             #select the most similar norm in the active norm base to make the decision
-            (most_similar_action, num) = find_most_similar_action(possible_actions, action)
+            # (most_similar_action, num) = find_most_similar_action(possible_actions, action)
             # (most_similar_action, num) = find_most_similar_action_2(possible_actions, action)
-            # (most_similar_action, num) = find_most_similar_action_3(possible_actions, action)
-            import pdb; pdb.set_trace()
+            (most_similar_action, num) = find_most_similar_action_3(possible_actions, action)
+            # import pdb; pdb.set_trace()
             if num == 1:
                 most_similar_one = most_similar_action[0]
                 x = tuple(most_similar_one[:-1])
                 # import pdb; pdb.set_trace()
-                y = list(active_norm_base[x].keys())
+                if x == ('send', 'spa', ' ', 'call_assistant', 'call assistant', 'primary user', ' '):
+                    import pdb; pdb.set_trace()
+                new = active_norm_base[x].keys()
+                y = list(new)
+                # y = list(active_norm_base[x].keys())
                 result.append(y[0])
 
             else:
@@ -835,9 +883,9 @@ def action_determine(action):
                         matching_norm_base[key2] = value2
                         possible_actions_1.append(list(key2))
              
-        (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
+        # (most_similar_action, num) = find_most_similar_action(possible_actions_1, action)
         # (most_similar_action, num) = find_most_similar_action_2(possible_actions_1, action)
-        # (most_similar_action, num) = find_most_similar_action_3(possible_actions_1, action)
+        (most_similar_action, num) = find_most_similar_action_3(possible_actions_1, action)
         
         if num == 1:
             most_similar_one = most_similar_action[0][:-1]
