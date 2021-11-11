@@ -56,6 +56,6 @@ for sent in sentences:
     print("Sentence = ", sent, "; similarity = ", sim)
 index = sim_value.index(max(sim_value))
 print(index, sim_value[index])
-import pdb; pdb.set_trace()
+
 
 

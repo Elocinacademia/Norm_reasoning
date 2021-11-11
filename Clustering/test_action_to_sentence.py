@@ -33,7 +33,7 @@ def form_sentence(ori_action):
         else:
             sentence = 'The assistant is sending ' + action[4] + ' of ' + action[5] + ' to ' + action[2]+  ' ' + action[6]
     
-    import pdb; pdb.set_trace()  
+    
 
     return sentence
 
